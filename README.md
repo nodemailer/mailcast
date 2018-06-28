@@ -6,6 +6,13 @@ Minimail is a mailing list management software, batteries included. Install in o
 
 Minimail is simple. It is not targeted for marketing purposes, it is for simpler newsletters. If you want to send an occasional newsletter to your followers then Minimail is for you. If you want to send out triggered campaigns or perform A/B testing, then look somewhere else.
 
+### Features
+
+-   List management
+-   Customizable subscription forms
+-   Multi tenant, let your family or friends manage their own lists
+-   Built-in MTA, no need to use a separate SMTP service
+
 ### Requirements
 
 -   Nodejs v8+
