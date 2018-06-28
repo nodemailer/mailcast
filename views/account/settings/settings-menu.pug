@@ -1,0 +1,8 @@
+nav.nav.nav-tabs
+    li.nav-item
+        a.nav-link(href='/account/settings/', class={'active': settingsPage=='profile'}) Profile
+    li.nav-item
+        a.nav-link(href='/account/settings/password', class={'active': settingsPage=='password'}) Password
+    if user.status === 'admin'
+        li.nav-item
+            a.nav-link(href='/account/settings/site', class={'active': settingsPage=='site'}) Site settings

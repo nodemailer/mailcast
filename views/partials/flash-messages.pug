@@ -1,0 +1,6 @@
+//- enumerate all pending flash messages
+each type in ['danger', 'success']
+  if messages[type]
+    div
+      each message in messages[type]
+        +alert(type, message) //- see partials/alert.pug

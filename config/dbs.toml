@@ -1,0 +1,6 @@
+# redis connection string for Express sessions
+redis="redis://127.0.0.1:6379/7"
+
+# main database
+mongo="mongodb://127.0.0.1:27017/minimail"
+sender="minimta"

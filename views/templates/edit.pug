@@ -1,0 +1,52 @@
+extends ../layouts/main.pug
+
+block content
+    if error
+        +alert('danger', error)
+
+    include template-header
+
+    form(method='post', action='/templates/edit')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='template', value=template)
+
+        include template-form
+
+        .float-right
+            button.btn.btn-danger(type="button", data-toggle="modal", data-target="#mm-delete-confirm") Delete template
+
+        .form-group
+            button.btn.btn-primary(type="submit") Save changes
+            = " "
+            a.btn.btn-warning(href='/templates') Cancel
+
+    form(method='post', action='/templates/delete')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='template', value=template)
+        +confirmDelete('mm-delete-confirm', 'Delete template', 'Are you sure you want to delete this template? This action is irreversible.', 'No, cancel', 'Yes, delete')
+
+block append scripts
+    script(src='/ace/ace.js')
+
+    script.
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/xcode");
+        editor.session.setMode("ace/mode/handlebars");
+
+        var textarea = $('textarea#code').hide();
+        editor.getSession().setValue(textarea.val());
+        editor.getSession().on('change', function(){
+            textarea.val(editor.getSession().getValue());
+        });
+
+        function setupEditorInsert(elm){
+            elm.addEventListener('click', function(e){
+                e.preventDefault();
+                editor.insert(elm.dataset.value)
+            }, false)
+        }
+
+        var btns = document.querySelectorAll('.mm-editor-insert');
+        for(var i=0, len=btns.length; i<len; i++){
+            setupEditorInsert(btns[i]);
+        }

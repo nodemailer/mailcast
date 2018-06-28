@@ -1,0 +1,15 @@
+extends ../../layouts/email.pug
+
+block content
+    h3 Please Confirm Subscription
+
+    p Thank you for signing up to #{listData.name}.
+
+    p
+        a.action-link(href=validationUrl) Click here to confirm your subscription
+
+    p If you received this email by mistake, simply delete it. You won't be subscribed if you don't click the confirmation link above.
+
+    p For questions about this list, please contact:
+        =" "
+        a(href='mailto:'+listData.email)= listData.email

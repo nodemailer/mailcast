@@ -1,0 +1,18 @@
+extends ../layouts/subscribers.pug
+
+block content
+    h3 Subscribe to #{listData.name}
+
+    if error
+        +alert('danger', error)
+
+    form(method='post', action='/subscribers/subscribe')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='list', value=list)
+        input(type='hidden', name='tz', value=values.tz, class={'mm-tz-detect': !values.tz})
+        input.mm-clear(type='hidden', name='e', value='1')
+
+        include ./form.pug
+
+        .form-group
+            button.btn.btn-primary(type="submit") Subscribe

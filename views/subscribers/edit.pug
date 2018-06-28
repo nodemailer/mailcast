@@ -1,0 +1,36 @@
+extends ../layouts/subscribers.pug
+
+block content
+    h3 Update your preferences for #{listData.name}
+
+    if error
+        +alert('danger', error)
+
+    form(method='post', action='/subscribers/edit')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='subscriber', value=subscriber)
+        input(type='hidden', name='tz', value=values.tz, class={'mm-tz-detect': !values.tz})
+
+        include ./form.pug
+
+        .form-group
+            label(for='status') Subscription status
+            select#status.form-control(name='status', class={'is-invalid': errors && errors.status})
+                option(value='subscribed', selected=values.status==='subscribed')
+                    if values.status==='subscribed'
+                        | Subscribed
+                    else
+                        | Subscribe me to this list
+                option(value='unsubscribed', selected=values.status!=='subscribed')
+                    if values.status!=='subscribed'
+                        | Unsubscribed
+                    else
+                        | Unsubscribe me from this list
+                if values.status==='bounced'
+            if errors && errors.status
+                .invalid-feedback= errors.status
+
+        .form-group
+            button.btn.btn-primary(type="submit") Update preferences
+            = " or "
+            a(href='/subscribers/unsubscribe/' + subscriber) Unsubscribe

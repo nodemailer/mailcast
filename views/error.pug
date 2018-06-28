@@ -1,0 +1,7 @@
+extends layouts/main.pug
+
+block content
+    h2 #{status} Error
+    p.lead= message
+    if error
+        pre= error.stack

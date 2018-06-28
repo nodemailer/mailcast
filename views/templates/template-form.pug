@@ -1,0 +1,25 @@
+.form-group
+    label(for='name') Template name
+    input#name.form-control(type='name', name='name', placeholder='Template name', required=true, value=values.name, class={'is-invalid': errors && errors.name})
+    if errors && errors.name
+        .invalid-feedback= errors.name
+
+.form-group
+
+    div.dropdown.float-right
+        button.btn.btn-secondary.dropdown-toggle(type="button", data-toggle="dropdown") Insert field value
+        div.dropdown-menu
+            a.dropdown-item.mm-editor-insert(href='#', data-value="{{SUBJECT}}") Subject line
+            a.dropdown-item.mm-editor-insert(href='#', data-value="{{{CONTENTS}}}") Message contents
+            a.dropdown-item.mm-editor-insert(href='#', data-value="{{PREFERENCES_URL}}") Preferences URL
+            a.dropdown-item.mm-editor-insert(href='#', data-value="{{UNSUBSCRIBE_URL}}") Unsubscribe URL
+            a.dropdown-item.mm-editor-insert(href='#', data-value="{{ARCHIVED_URL}}") Archived URL
+
+    label(for='code') Template HTML
+    div.clearfix
+
+    div#editor.mt-1(style='height: 350px')
+    textarea.pgp-input#code.form-control(name='code', placeholder='<h2>My Awesome Homepage</h2>', rows=12, class={'is-invalid': errors && errors.code})= values.code
+    small.form-text.text-muted HTML base template for emails using <a href="https://handlebarsjs.com/" target="_blank">Handlebars syntax</a>
+    if errors && errors.code
+        .invalid-feedback= errors.code

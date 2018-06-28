@@ -1,0 +1,7 @@
+node_modules
+.DS_Store
+public/css
+public/app
+config/development.toml
+package-lock.json
+

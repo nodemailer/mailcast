@@ -1,0 +1,8 @@
+nav.nav.nav-tabs
+    li.nav-item
+        a.nav-link(href='/messages/view/'+message, class={'active': messagePage=='view'}) Overview
+    li.nav-item
+        a.nav-link(href='/messages/edit/'+message, class={'active': messagePage=='edit'}) Settings
+    if messagePage=='manage'
+        li.nav-item
+            a.nav-link.active(href='#')= title

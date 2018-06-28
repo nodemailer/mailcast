@@ -1,0 +1,35 @@
+extends ../layouts/main.pug
+
+block content
+
+    include list-main-header
+
+    if !lists.length
+        p No lists created so far,
+            = " "
+            a(href='/lists/add') create one here
+            |.
+
+    else
+        table.table.mt-3
+            thead
+                tr
+                    th #
+                    th Name
+                    th Subscribers
+                    th &nbsp;
+            tbody
+                for listData in lists
+                    tr
+                        th= listData.nr
+
+                        td
+                            a(href='/lists/view/'+listData._id)
+                                span.oi.oi-list
+                                = " " + listData.name
+
+                        td #{msg('{N, plural, =0 {no subscribers} one {1 subscriber} other {# subscribers}}',{N: listData.subscribers})}
+                        td
+                            a(href='/lists/edit/'+listData._id) Edit
+
+    +paging(curpage, pages, pagingUrl)

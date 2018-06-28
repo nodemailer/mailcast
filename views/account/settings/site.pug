@@ -1,0 +1,48 @@
+extends ../../layouts/main.pug
+
+block content
+
+    include settings-header
+
+    form(method='post', action='/account/settings/site')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        .form-group
+            label(for='global_site_appName') Site name
+            input#global_site_appName.form-control(type='text', name='global_site_appName', placeholder='Your awesome app', required=true, value=values.global_site_appName, class={'is-invalid': errors && errors.global_site_appName})
+            if errors && errors.global_site_appName
+                .invalid-feedback= errors.global_site_appName
+
+        .form-group
+            label(for='global_site_hostname') Sender domain
+            input#global_site_hostname.form-control(type='text', name='global_site_hostname', placeholder='Your awesome app', required=true, value=values.global_site_hostname, class={'is-invalid': errors && errors.global_site_hostname})
+            small.form-text.text-muted All messages are sent from this domain, so the MX records of the domain should point to current server to catch potential bounces
+            if errors && errors.global_site_hostname
+                .invalid-feedback= errors.global_site_hostname
+
+        .form-group
+            label(for='global_site_baseUrl') Site URL
+            input#global_site_baseUrl.form-control(type='url', name='global_site_baseUrl', placeholder='http://example.com', required=true, value=values.global_site_baseUrl, class={'is-invalid': errors && errors.global_site_baseUrl})
+            small.form-text.text-muted This is the URL your service can be accessed. This address is mostly used in emails.
+            if errors && errors.global_site_baseUrl
+                .invalid-feedback= errors.global_site_baseUrl
+
+        div.form-group.form-check
+            input.form-check-input#reset-dkim(type='checkbox', name='resetDkim', checked=values.resetDkim)
+            label.form-check-label(for="reset-dkim") Reset DKIM key
+            small.form-text.text-muted Check this if you want to replace current DKIM key with a new one
+
+        .form-group
+            label DKIM Selector
+            input.form-control.pgp-input(type='text', value=dkim.name, readonly=true)
+            small.form-text.text-muted Use this value as the subdomain name of your email domain for a DNS TXT record
+
+        .form-group
+            label DKIM Public Key
+            input.form-control.pgp-input(type='text', value=dkim.value, readonly=true)
+            small.form-text.text-muted Use this as the value for the DNS TXT record
+
+        .form-group
+            button.btn.btn-primary(type='submit') Update settings
+            = " "
+            a.btn.btn-warning(href='/account/settings') Cancel

@@ -1,0 +1,38 @@
+.form-group
+    label(for='name') List name
+    input#name.form-control(type='text', name='name', placeholder='List name', required=true, value=values.name, class={'is-invalid': errors && errors.name})
+    if errors && errors.name
+        .invalid-feedback= errors.name
+
+.form-group
+    label(for='description') List description
+    input#description.form-control(type='text', name='description', placeholder='List description', value=values.description, class={'is-invalid': errors && errors.description})
+    small.form-text.text-muted Something that describes this list.
+    if errors && errors.description
+        .invalid-feedback= errors.description
+
+.form-group
+    label(for='email') From email address
+    input#email.form-control(type='email', name='email', placeholder='From email', required=true, value=values.email, class={'is-invalid': errors && errors.email})
+    small.form-text.text-muted This is the address people will reply to.
+    if errors && errors.email
+        .invalid-feedback= errors.email
+
+.form-group
+    label(for='fromname') From name
+    input#fromname.form-control(type='text', name='fromname', placeholder='From name', required=true, value=values.fromname, class={'is-invalid': errors && errors.fromname})
+    small.form-text.text-muted This is who your emails will come from.
+    if errors && errors.fromname
+        .invalid-feedback= errors.fromname
+
+.form-group
+    label(for='mmHeader') Header HTML
+    textarea#mmHeader.form-control(name='header', placeholder='<h2>My Awesome Homepage</h2>', rows=5, class={'is-invalid': errors && errors.header})= values.header
+    small.form-text.text-muted Optional HTML code to be shown in the header of the subscription form.
+    if errors && errors.header
+        .invalid-feedback= errors.header
+
+div.form-group.form-check
+    input.form-check-input#pgp(type='checkbox', name='pgp', checked=values.pgp)
+    label.form-check-label(for="pgp") PGP encryption
+    small.form-text.text-muted Add PGP public key field for the subscription form.

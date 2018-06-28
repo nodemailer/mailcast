@@ -1,0 +1,27 @@
+extends ../layouts/main.pug
+
+block content
+
+    if error
+        +alert('danger', error)
+
+    include list-header
+
+    form(method='post', action='/lists/edit')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='list', value=list)
+
+        include ./list-form.pug
+
+        .float-right
+            button.btn.btn-danger(type="button", data-toggle="modal", data-target="#mm-delete-confirm") Delete list
+
+        .form-group
+            button.btn.btn-primary(type="submit") Save changes
+            = " "
+            a.btn.btn-warning(href='/lists/view/'+list) Cancel
+
+    form(method='post', action='/lists/delete')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='list', value=list)
+        +confirmDelete('mm-delete-confirm', 'Delete list', 'Are you sure you want to delete this list?', 'No, cancel', 'Yes, delete')

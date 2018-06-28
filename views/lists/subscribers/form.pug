@@ -1,0 +1,23 @@
+include ../../subscribers/form.pug
+
+div.form-group.form-check
+    input.form-check-input#testSubscriber(type='checkbox', name='testSubscriber', checked=values.testSubscriber)
+    label.form-check-label(for="testSubscriber") Test subscriber
+    small.form-text.text-muted You can send preview emails to test subscribers before sending out to the entire list
+
+.form-group
+    label(for='note') Note
+    textarea#note.form-control(name='note', placeholder='Note', value=values.note, rows=3, class={'is-invalid': errors && errors.note})= values.note
+    small.form-text.text-muted Subscribers do not see this info
+    if errors && errors.note
+        .invalid-feedback= errors.note
+
+.form-group
+    label(for='status') Subscription status
+    select#status.form-control(name='status', class={'is-invalid': errors && errors.status})
+        option(value='subscribed', selected=values.status==='subscribed') Subscribed
+        option(value='unsubscribed', selected=values.status==='unsubscribed') Unsubscribed
+        option(value='unconfirmed', selected=values.status==='unconfirmed') Unconfirmed
+        option(value='bounced', selected=values.status==='bounced') Bounced
+    if errors && errors.status
+        .invalid-feedback= errors.status

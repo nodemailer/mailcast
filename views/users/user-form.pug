@@ -1,0 +1,38 @@
+.form-group
+    label(for='name') User name
+    input#name.form-control(type='name', name='name', placeholder='User name', required=true, value=values.name, class={'is-invalid': errors && errors.name})
+    if errors && errors.name
+        .invalid-feedback= errors.name
+
+.form-group
+    label(for='email') Email address
+    input#email.form-control(type='email', name='email', placeholder='User email', required=true, value=values.email, class={'is-invalid': errors && errors.email})
+    small.form-text.text-muted Account password is sent to this email address
+    if errors && errors.email
+        .invalid-feedback= errors.email
+
+.form-group
+    label(for='locale') Locale
+    select#locale.form-control(name='locale', class={'is-invalid': errors && errors.locale})
+        for item in locales
+            option(value=item.code, selected=values.locale == item.code) #{item.language} (#{item.country})
+    small.form-text.text-muted Date and number format
+    if errors && errors.locale
+        .invalid-feedback= errors.locale
+
+.form-group
+    label(for='tz') Timezone
+    select#tz.form-control(name='tz', class={'is-invalid': errors && errors.tz}, class={'mm-tz-detect': !values.tz})
+        for timezone in timezones
+            option(value=timezone, selected=values.tz == timezone) #{timezone}
+    small.form-text.text-muted User timezone
+    if errors && errors.tz
+        .invalid-feedback= errors.tz
+
+.form-group
+    label(for='status') Status
+    select#status.form-control(name='status', class={'is-invalid': errors && errors.status})
+        for item in statuses
+            option(value=item.key, selected=values.status == item.key) #{item.name}
+    if errors && errors.status
+        .invalid-feedback= errors.status

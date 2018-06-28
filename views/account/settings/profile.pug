@@ -1,0 +1,39 @@
+extends ../../layouts/main.pug
+
+block content
+
+    include settings-header
+
+    form(method='post', action='/account/settings/profile')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        .form-group
+            label(for='email') Email address
+            input#email.form-control-plaintext(type='text', readonly=true, value=user.email)
+
+        .form-group
+            label(for='name') Your name
+            input#name.form-control(type='name', name='name', placeholder='Your name', required=true, value=values.name, class={'is-invalid': errors && errors.name})
+            if errors && errors.name
+                .invalid-feedback= errors.name
+
+        .form-group
+            label(for='locale') Locale
+            select#locale.form-control(name='locale', class={'is-invalid': errors && errors.locale})
+                for item in locales
+                    option(value=item.code, selected=values.locale == item.code) #{item.language} (#{item.country})
+            small.form-text.text-muted Date and number format
+            if errors && errors.locale
+                .invalid-feedback= errors.locale
+
+        .form-group
+            label(for='tz') Timezone
+            select#tz.form-control(name='tz', class={'is-invalid': errors && errors.locale}, class={'mm-tz-detect': !values.tz})
+                for timezone in timezones
+                    option(value=timezone, selected=values.tz == timezone) #{timezone}
+            small.form-text.text-muted Your timezone
+            if errors && errors.tz
+                .invalid-feedback= errors.tz
+
+        .form-group
+            button.btn.btn-primary(type='submit') Save changes

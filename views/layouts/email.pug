@@ -1,0 +1,19 @@
+//- use this template for email HTML content, do not use javascript as it will be stripped from final output.
+//- Styles from CSS files are automatically inlined using Juice https://github.com/Automattic/juice
+
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    link(href='/css/email.css', rel='stylesheet')
+
+  body
+    .container
+      block content
+        //- placeholder that is replaced by child templates
+
+      block footer
+        #footer
+          p
+            a(href=appurl) #{appname}

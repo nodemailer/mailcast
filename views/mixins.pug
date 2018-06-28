@@ -1,0 +1,47 @@
+//- alert message, usage: +alert('danger', 'This will be rendered as an alert')
+mixin alert(type, message)
+  div.mt-3.alert.alert-dismissible.fade.show(class='alert-' + type)= message
+    button.close(type='button', data-dismiss='alert', aria-label='Close')
+      span(aria-hidden='true') &times;
+
+//- +paging(1, 10, '/data?page=')
+mixin paging(page, pages, url)
+    if pages > 1
+        nav
+            ul.pagination
+                li.page-item(class={'disabled': page<=1})
+                    a.page-link(href=format(url, page-1)) Previous
+
+                - var i = 1
+                while i <= pages
+                    li.page-item(class={'active': i==page})
+                        a.page-link(href=format(url, i)) #{i}
+                    - i++
+
+                li.page-item(class={'disabled': page>=pages})
+                    a.page-link(href=format(url, page+1)) Next
+
+
+mixin modal(id, title, text, canceltype, oktype, canceltext, oktext)
+    div.modal(id=id, tabindex="-1", role="dialog")
+        div.modal-dialog(role="document")
+            div.modal-content
+                div.modal-header
+                    h5.modal-title= title
+                    button.close(type="button", data-dismiss="modal", aria-label="Close")
+                        span(aria-hidden="true") &times;
+
+                div.modal-body
+                    p= text
+
+                div.modal-footer
+                    if canceltext
+                        button.btn(type="button", class="btn-"+canceltype, data-dismiss="modal")= canceltext
+                    if oktext
+                        button.btn(type="submit", class="btn-"+oktype)= oktext
+
+mixin confirm(id, title, text, canceltext, oktext)
+    +modal(id, title, text, "secondary", "primary", canceltext, oktext)
+
+mixin confirmDelete(id, title, text, canceltext, oktext)
+    +modal(id, title, text, "secondary", "danger", canceltext, oktext)

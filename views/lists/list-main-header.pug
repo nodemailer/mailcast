@@ -1,0 +1,14 @@
+div.float-right
+    a.btn.btn-info(href='/lists/add') Add new list
+
+h2 Lists
+p.lead This is where you can manage your lists of subscribers.
+
+nav.nav.nav-tabs
+    li.nav-item
+        a.nav-link(href='/lists', class={'active': listPage=='list'}) Lists
+    if listPage=='manage'
+        li.nav-item
+            a.nav-link.active(href='#')= title
+
+div.clearfix.mt-3

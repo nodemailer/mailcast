@@ -1,0 +1,30 @@
+extends ../layouts/main.pug
+
+block content
+    if error
+        +alert('danger', error)
+
+    include message-header
+
+    form(method='post', action='/messages/settings')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        div.form-group.form-check
+            input.form-check-input#text-only(type='checkbox', name='textOnly', checked=values.textOnly)
+            label.form-check-label(for="text-only") Plaintext by default
+            small.form-text.text-muted Do not use HTML formatted content. Does not apply to existing messages.
+
+        div.form-group.form-check
+            input.form-check-input#disable-tracking(type='checkbox', name='disableTracking', checked=values.disableTracking)
+            label.form-check-label(for="disable-tracking") Disable user tracking by default
+            small.form-text.text-muted Turn off subscriber tracking for opens and clicks. Does not apply to existing messages.
+
+        div.form-group.form-check
+            input.form-check-input#use-code-editor(type='checkbox', name='useCodeEditor', checked=values.useCodeEditor)
+            label.form-check-label(for="use-code-editor") Use HTML code editor when creating messages
+            small.form-text.text-muted By default messages are created with using WYSIWYG editor, this toggles editor to code mode (applies to new messages only)
+
+        .form-group
+            button.btn.btn-primary(type='submit') Update settings
+            = " "
+            a.btn.btn-warning(href='/messages') Cancel

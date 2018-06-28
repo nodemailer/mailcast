@@ -1,0 +1,32 @@
+extends ../layouts/main.pug
+
+block content
+
+    include template-header
+
+    if !templates.length
+
+        p No templates created so far,
+            = " "
+            a(href='/templates/add') add one here
+            |.
+
+    else
+
+        table.table.mt-3
+            thead
+                tr
+                    th #
+                    th Name
+                    th Created
+                    th &nbsp;
+            tbody
+                for templateData in templates
+                    tr
+                        th= templateData.nr
+                        td= templateData.name
+                        td= templateData.createdStr
+                        td
+                            a(href='/templates/edit/'+templateData._id) Edit
+
+    +paging(curpage, pages, pagingUrl)

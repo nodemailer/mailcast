@@ -1,0 +1,137 @@
+---
+indexes:
+
+- collection: settings
+  index:
+    name: unique_key
+    unique: true
+    key:
+      key: 1
+
+- collection: users
+  index:
+    name: unique_username
+    unique: true
+    key:
+      uemail: 1
+
+- collection: users
+  index:
+    name: by_name
+    key:
+      name: 1
+
+- collection: lists
+  index:
+    name: by_user
+    key:
+      user: 1
+      name: 1
+
+- collection: subscribers
+  index:
+    name: unique_subscriber
+    unique: true
+    key:
+      list: 1
+      uemail: 1
+
+- collection: subscribers
+  index:
+    name: by_name
+    key:
+      list: 1
+      name: 1
+
+- collection: subscribers
+  index:
+    name: by_address
+    key:
+      list: 1
+      uemail: 1
+      confirmToken: 1
+
+- collection: subscribers
+  index:
+    name: by_status
+    key:
+      list: 1
+      status: 1
+      _id: 1
+
+- collection: subscribers
+  # delete unconfirmed entries after 1 day
+  index:
+    name: unconfirmed_autoexpire
+    expireAfterSeconds: 86400
+    key:
+      created: 1
+    partialFilterExpression:
+      status: 'unconfirmed'
+      messages: 0
+
+- collection: pending
+  # delete unconfirmed entries after 1 day
+  index:
+    name: unconfirmed_autoexpire
+    expireAfterSeconds: 86400
+    key:
+      created: 1
+
+- collection: messages
+  index:
+    name: by_user
+    key:
+      user: 1
+      name: 1
+
+- collection: messages
+  index:
+    name: process_next
+    key:
+      status: 1
+      draft: 1
+      locked: 1
+
+- collection: templates
+  index:
+    name: by_user
+    key:
+      user: 1
+      name: 1
+
+- collection: emails
+  index:
+    name: by_user
+    key:
+      user: 1
+      id: 1
+
+- collection: emails
+  index:
+    name: by_message
+    key:
+      message: 1
+      created: -1
+
+- collection: emails
+  index:
+    name: count_by_message
+    key:
+      message: 1
+      draft: 1
+
+- collection: emails
+  index:
+    name: by_subscriber
+    key:
+      subscriber: 1
+      created: -1
+
+#- collection: emails
+#  # autoexpire old email entries after 180 days
+#  index:
+#    name: old_events
+#    expireAfterSeconds: 15552000
+#    key:
+#      created: 1

@@ -1,0 +1,83 @@
+extends ../layouts/main.pug
+
+block content
+
+    if error
+        +alert('danger', error)
+
+    include list-header
+
+    form(method='post', action='/lists/fields')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='list', value=list)
+        input#mm-ordering(type='hidden', name='ordering', value='')
+
+        table.table.mt-3.mm-sortable
+            thead
+                tr
+                    th &nbsp;
+                    th Field Name
+                    th Field Key
+                    th.text-center Hidden
+                    th.text-center Delete
+            tbody
+                for field in fields
+                    tr(id='field-'+field.key, class={'mm-state-disabled': field.required})
+                        td
+                            if !field.required
+                                div.mm-handle
+                                    svg(xmlns="http://www.w3.org/2000/svg", width="18", height="18", viewBox="0 0 18 18")
+                                        path(d="M20 9H4v2h16V9zM4 15h16v-2H4v2z")
+                        td
+                            input.form-control(type=text, name='name[' +field.key+']', value=field.name, placeholder='Field name', required=true)
+
+                        td= field.key
+
+                        td.text-center
+                            if field.required
+                                span –
+                            else
+                                input(type="checkbox", name='hidden[' +field.key+']', checked=field.hidden)
+
+                        td.text-center
+                            if field.keep
+                                span –
+                            else
+                                input(type="checkbox", name='del[' +field.key+']', checked=field.delete)
+
+        .form-group
+            label(for='fields') Add custom fields
+            textarea#fields.form-control(name='fields', placeholder='Where did you hear from us?', rows=5, class={'is-invalid': errors && errors.fields})= values.fields
+            small.form-text.text-muted One field name per line. Every field gets its own textbox in the subscription form.
+            if errors && errors.fields
+                .invalid-feedback= errors.fields
+
+        .form-group
+            button.btn.btn-primary(type="submit") Save changes
+            = " "
+            a.btn.btn-warning(href='/lists/view/'+list) Cancel
+
+block append css
+    link(href='/jquery-ui/jquery-ui.css', rel='stylesheet')
+
+block append scripts
+    script(src='/jquery-ui/jquery-ui.min.js')
+    script.
+        $('table.mm-sortable tbody').sortable({
+            items: "tr:not(.mm-state-disabled)",
+            handle: ".mm-handle",
+            update: function( event, ui ) {
+                var items = document.querySelectorAll('table.mm-sortable tbody tr');
+                var ordering = [];
+                var id;
+                for(var i=0, len=items.length; i<len; i++){
+                    id = (items[i].id || '').toString();
+                    if(!/^field\-./.test(id)){
+                        return;
+                    }
+                    id = id.substr(6);
+                    ordering.push(id);
+                }
+                document.getElementById('mm-ordering').value = ordering.join(',');
+            }
+        });

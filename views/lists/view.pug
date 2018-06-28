@@ -1,0 +1,51 @@
+extends ../layouts/main.pug
+
+block content
+
+    include list-header
+
+    form(method='get', action='/lists/view/' + list)
+        div.form-row.align-items-center
+            div.col-auto
+                input.form-control.mb-2(type="search", name="query", value=query, placeholder="Search")
+            div.col-auto
+                button.btn.btn-primary.mb-2(type="submit") Search
+                if query
+                    =" "
+                    a.btn.btn-warning.mb-2(href='/lists/view/'+list) Clear search
+
+    if !subscribers.length
+        if query
+            p Nothing found for your query
+        else
+            p No subscribers added so far,
+                = " "
+                a(href='/lists/subscribers/'+list+'/add') add one here
+                |.
+
+    else
+
+        table.table.mt-3
+            thead
+                tr
+                    th #
+                    th Name
+                    th Address
+                    th Status
+                    th Created
+                    th &nbsp;
+            tbody
+                for subscriberData in subscribers
+                    tr
+                        th= subscriberData.nr
+                        td= subscriberData.name
+                            if subscriberData.testSubscriber
+                                =" "
+                                span.badge.badge-secondary test
+                        td= subscriberData.email
+                        td= subscriberData.statusStr
+                        td= subscriberData.createdStr
+                        td
+                            a(href='/lists/subscribers/'+list+'/edit/'+subscriberData._id) Edit
+
+    +paging(curpage, pages, pagingUrl)

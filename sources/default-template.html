@@ -1,0 +1,52 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>{{SUBJECT}}</title>
+
+    <style type="text/css">
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        .footer {
+            margin-top: 1rem;
+        }
+
+        .footer,
+        .footer a {
+            color: #666;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contents">
+        {{{CONTENTS}}}
+    </div>
+
+    <div class="footer">
+        <a href="{{PREFERENCES_URL}}">
+            Preferences
+        </a> |
+
+        <a href="{{UNSUBSCRIBE_URL}}">
+            Unsubscribe
+        </a> |
+
+        <a href="{{ARCHIVED_URL}}">
+            View this email in your browser
+        </a>
+    </div>
+
+</body>
+
+</html>

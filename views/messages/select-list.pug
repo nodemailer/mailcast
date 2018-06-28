@@ -1,0 +1,31 @@
+extends ../layouts/main.pug
+
+block content
+
+    if error
+        +alert('danger', error)
+
+    include message-header
+
+    form(method='get', action='/messages/add')
+        .form-group
+            label(for='list') Recipients
+            select#list.form-control(name='list', required=true, class={'is-invalid': errors && errors.list})
+                option(value='') –– Select ––
+                for list in lists
+                    option(value=list._id, selected=values.list == list._id)
+                        | #{list.name}
+                        | (#{msg('{N, plural, =0 {no subscribers yet} one {1 subscriber} other {# subscribers}}',{N: list.subscribers})})
+                optgroup(label='Actions…')
+                    option(value='new') Create new list
+            small.form-text.text-muted Recipients for the message
+            if errors && errors.list
+                .invalid-feedback= errors.list
+
+        .form-group
+            button.btn.btn-primary(type="submit") Continue
+            = " "
+            a.btn.btn-warning(href='/lists') Cancel
+
+block append css
+    link(href='/quill/quill.snow.css', rel='stylesheet')

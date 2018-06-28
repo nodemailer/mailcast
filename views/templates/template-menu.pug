@@ -1,0 +1,6 @@
+nav.nav.nav-tabs
+    li.nav-item
+        a.nav-link(href='/templates', class={'active': templatePage=='list'}) Templates
+    if templatePage=='manage'
+        li.nav-item
+            a.nav-link.active(href='#')= title

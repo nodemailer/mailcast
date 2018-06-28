@@ -1,0 +1,11 @@
+extends ../../layouts/email.pug
+
+block content
+  h3 Hello #{userData.name}
+  p Someone (hopefully You) has asked to reset your account password.
+
+  p
+    span You can set a new password for your #{appname} account
+    =" "
+    a.action-link(href=recoveryUrl) here
+    | .

@@ -1,0 +1,18 @@
+extends ../../layouts/email.pug
+
+block content
+    h3 Hello #{userData.name},
+
+    p Welcome to #{appname}!
+
+    p
+        span You can log in to your account
+        =" "
+        a.action-link(href=loginUrl) by visiting this link
+        ="."
+
+    p Your password:
+        = " "
+        code #{userData.password}
+
+    p You should change this password as soon as possible

@@ -1,0 +1,15 @@
+for field in fields
+    if !field.hidden
+        .form-group
+            label(for='fields['+field.key+']')= field.name
+            if field.showHidden
+                =" "
+                small.text-muted (hidden for subscribers)
+            if field.type === 'pgp'
+                textarea.form-control.pgp-input(name='fields['+field.key+']', id='fields['+field.key+']', placeholder='Begins with "-----BEGIN PGP PUBLIC KEY BLOCK-----"', rows=5, class={'is-invalid': errors && errors[field.key]})= values.fields[field.key]
+            else
+                input.form-control(type=field.type, name='fields['+field.key+']', id='fields['+field.key+']', value=values.fields[field.key], required=field.required, class={'is-invalid': errors && errors[field.key]})
+            if field.help
+                small.form-text.text-muted= field.help
+            if errors && errors[field.key]
+                .invalid-feedback= errors[field.key]

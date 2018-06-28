@@ -1,0 +1,9 @@
+extends ../layouts/subscribers.pug
+
+block content
+    h3 Unsubscribed from #{listData.name}
+
+    p.lead Your subscription for #{listData.name} was successfully cancelled.
+
+    p
+        a(href='/subscribers/edit/' + subscriber) Update your preferences

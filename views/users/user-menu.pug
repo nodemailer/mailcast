@@ -1,0 +1,8 @@
+nav.nav.nav-tabs
+    li.nav-item
+        a.nav-link(href='/users', class={'active': userPage=='list'}) Users
+    li.nav-item
+        a.nav-link(href='/users/settings', class={'active': userPage=='settings'}) Settings
+    if userPage=='manage'
+        li.nav-item
+            a.nav-link.active(href='#')= title

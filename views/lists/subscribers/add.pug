@@ -1,0 +1,21 @@
+extends ../../layouts/main.pug
+
+block content
+
+    if error
+        +alert('danger', error)
+
+    include ../list-header
+
+    if error
+        +alert('danger', error)
+
+    form(method='post', action='/lists/subscribers/'+list+'/add')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        include ./form.pug
+
+        .form-group
+            button.btn.btn-primary(type="submit") Add subscriber
+            = " "
+            a.btn.btn-warning(href='/lists/view/'+list) Cancel

@@ -1,0 +1,9 @@
+extends ../layouts/subscribers.pug
+
+block content
+    h3 Subscribed to #{listData.name}
+
+    if emailSent
+        p Confirmation email message was sent to #{values.email}, you need to visit the link in order to activate your subscription
+    else
+        p Your subscription was updated

@@ -1,0 +1,61 @@
+extends ../layouts/main.pug
+
+block content
+
+    if error
+        +alert('danger', error)
+
+    include message-header
+
+    form(method='post', action='/messages/add')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        include ./message-form.pug
+
+        .form-group
+            button.btn.btn-primary(type="submit") Create draft
+            = " "
+            a.btn.btn-warning(href='/lists') Cancel
+
+
+block append css
+    if !values.useCodeEditor
+        link(href='/quill/quill.snow.css', rel='stylesheet')
+
+block append scripts
+
+    if !values.useCodeEditor
+        script(src='/quill/quill.min.js')
+        script(src='/editor.js')
+    else
+        script(src='/ace/ace.js')
+        script.
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/xcode");
+            editor.session.setMode("ace/mode/handlebars");
+            const editorElm = document.querySelector('#editordata');
+            editor.getSession().setValue(editordata.html);
+            let editortimer = false;
+            editor.getSession().on('change', function(){
+                clearTimeout(editortimer);
+                editortimer = setTimeout(() => {
+                    editorElm.value = JSON.stringify({
+                        html: editor.getSession().getValue(),
+                        changes: []
+                    });
+                }, 500);
+            });
+
+            document.querySelector('#mm-editor-insert-div').classList.remove('mm-hidden');
+
+            function setupEditorInsert(elm){
+                elm.addEventListener('click', function(e){
+                    e.preventDefault();
+                    editor.insert(elm.dataset.value)
+                }, false)
+            }
+
+            var btns = document.querySelectorAll('.mm-editor-insert');
+            for(var i=0, len=btns.length; i<len; i++){
+                setupEditorInsert(btns[i]);
+            }

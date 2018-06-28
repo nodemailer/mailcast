@@ -1,0 +1,41 @@
+extends ../layouts/main.pug
+
+block content
+
+    include user-header
+
+    form(method='get', action='/users')
+        div.form-row.align-items-center
+            div.col-auto
+                input.form-control.mb-2(type="search", name="query", value=query, placeholder="Search")
+            div.col-auto
+                button.btn.btn-primary.mb-2(type="submit") Search
+                if query
+                    =" "
+                    a.btn.btn-warning.mb-2(href='/users') Clear search
+
+    if !users.length
+
+        p Nothing found for your query
+
+    else
+
+        table.table.mt-3
+            thead
+                tr
+                    th #
+                    th Name
+                    th Address
+                    th Created
+                    th &nbsp;
+            tbody
+                for userData in users
+                    tr
+                        th= userData.nr
+                        td= userData.name
+                        td= userData.email
+                        td= userData.createdStr
+                        td
+                            a(href='/users/edit/'+userData._id) Edit
+
+    +paging(curpage, pages, pagingUrl)

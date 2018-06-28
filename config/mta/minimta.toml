@@ -1,0 +1,44 @@
+# This is the main config file for MTA
+
+name="MinimailMTA"
+
+# Process identifier
+ident="minimta"
+
+# @include "../user.toml"
+
+[log]
+# Logging options
+level="info" # "silly" "info" "error"
+remote=false
+
+[dbs]
+# MongoDB and Redis connection options
+# @include "../dbs.toml"
+
+[queue]
+# @include "queue.toml"
+
+[dns]
+# @include "dns.toml"
+
+[api]
+port=12080
+maildrop=true
+
+[smtpInterfaces]
+[smtpInterfaces.feeder]
+enabled=false
+
+[plugins]
+# @include "plugins/*.toml"
+
+[pools]
+# @include "pools.toml"
+
+[zones]
+# @include "zones/*.toml"
+bounces=false
+
+[domainConfig]
+# @include "domains.toml"

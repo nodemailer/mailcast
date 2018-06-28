@@ -1,0 +1,47 @@
+- var messages = flash() //- fetch pending alerts
+
+include ../mixins.pug
+
+doctype html
+html(lang='en')
+    head
+
+        // Required meta tags
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+
+        if title
+            title= appname +' | ' + title
+        else
+            title= appname
+
+        link(rel="icon", type="image/png", sizes="96x96", href="/favicon-96x96.png")
+        link(rel="icon", type="image/png", sizes="32x32", href="/favicon-32x32.png")
+        link(rel="icon", type="image/png", sizes="16x16", href="/favicon-16x16.png")
+        link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
+        link(rel="icon", href="/favicon.ico", type="image/x-icon")
+
+        block css
+            link(href='/css/styles.css', rel='stylesheet')
+
+    body
+        input#mm-user-locale(type='hidden', value=locale)
+
+        include ../partials/main-menu.pug
+
+        .container(style='margin-top: 60px;')
+
+            include ../partials/flash-messages.pug
+
+            block content
+                //- placeholder that is replaced by child templates
+
+            div.mt-3 &nbsp;
+        footer.footer
+            .container
+                span.text-muted #{appname} is powered by
+                    = " "
+                    a(href='https://github.com/andris9/minimail') Minimail
+
+        block scripts
+            script(src='/app/bundle.js')

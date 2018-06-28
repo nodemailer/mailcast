@@ -1,0 +1,17 @@
+extends ../layouts/main.pug
+
+block content
+    if error
+        +alert('danger', error)
+
+    include user-header
+
+    form(method='post', action='/users/add')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        include user-form
+
+        .form-group
+            button.btn.btn-primary(type='submit') Add new user
+            = " "
+            a.btn.btn-warning(href='/users') Cancel

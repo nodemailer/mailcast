@@ -1,0 +1,12 @@
+extends ../../layouts/email.pug
+
+block content
+    h3 Hello #{userData.name}
+    p Welcome to #{appname}!
+
+    p
+        span Your email address needs to be validated. Click
+        =" "
+        a.action-link(href=validationUrl) here
+        =" "
+        span to validate your email address.

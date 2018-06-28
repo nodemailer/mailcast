@@ -1,0 +1,9 @@
+extends ../layouts/subscribers.pug
+
+block content
+    h3 Subscription confirmed
+
+    p.lead Your subscription for #{listData.name} was successfully confirmed.
+
+    p
+        a.btn.btn-primary(href='/subscribers/edit/' + subscriber) Update your preferences

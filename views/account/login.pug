@@ -1,0 +1,33 @@
+extends ../layouts/main.pug
+
+block content
+    h2 Log in
+
+    if error
+        +alert('danger', error)
+
+    form(method='post', action='/account/login')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        .form-group
+            label(for='email') Email address
+            input#email.form-control(type='email', name='email', placeholder='Your email', required=true, autofocus=true, value=values.email, class={'is-invalid': errors && errors.email})
+            if errors && errors.email
+                .invalid-feedback= errors.email
+
+        .form-group
+            label(for='password') Password
+            input#password.form-control(type='password', name='password', placeholder='Password', required=true, class={'is-invalid': errors && errors.password})
+            if errors && errors.password
+                .invalid-feedback= errors.password
+
+        .form-check
+            input#remember.form-check-input(type='checkbox', name='remember', checked=values.remember, class={'is-invalid': errors && errors.remember})
+            label(for='remember') Remember me
+            if errors && errors.remember
+                .invalid-feedback= errors.remember
+
+        .form-group
+            button.btn.btn-primary(type='submit') Log in
+            = " "
+            a(href='/account/recover') Forgot password?

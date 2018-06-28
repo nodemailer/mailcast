@@ -1,0 +1,31 @@
+extends layouts/subscribers.pug
+
+block content
+    h2 #{appname}
+
+    h5 What is this page?
+
+    p You have reached an email newsmessage management software running at
+        = " "
+        em #{appurl}
+        |.
+
+    h5 How can I unsubscribe?
+
+    p If you want to unsubscribe from a list managed by #{appname} then find the unsubscribe link from a list message or alternatively, find the unsubscribe link from message headers. For example in Gmail select "Show original" from message menu and in the opened window look for the List-Unsubscribe header.
+
+    hr
+
+    h5 List admins
+
+    if user
+        p
+            a.btn.btn-primary(href='/lists') Enter
+            = " or "
+            a.btn.btn-primary(href='/account/logout') Log out
+    else
+        p
+            if !disableJoin
+                a.btn.btn-primary(href='/account/join') Create an account
+                = " or "
+            a.btn.btn-primary(href='/account/login') Log in

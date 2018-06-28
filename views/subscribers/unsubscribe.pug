@@ -1,0 +1,20 @@
+extends ../layouts/subscribers.pug
+
+block content
+    h3 Unsubscribe from #{listData.name}
+
+    if error
+        +alert('danger', error)
+
+    form.mm-autosubmit(method='post', action='/subscribers/unsubscribe')
+        input(type='hidden', name='_csrf', value=csrf)
+        input(type='hidden', name='subscriber', value=subscriber)
+
+        .form-group
+            label(for='email') Email address
+            input#email.form-control(type='email', name='email', placeholder='Email address', readonly=true, disabled=true, value=values.email, class={'is-invalid': errors && errors.email})
+            if errors && errors.email
+                .invalid-feedback= errors.email
+
+        .form-group
+            button.btn.btn-primary(type="submit") Unsubscribe

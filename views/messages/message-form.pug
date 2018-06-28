@@ -1,0 +1,63 @@
+input(type='hidden', name='list', value=values.list)
+input#editordata(type='hidden', name='editordata', value=editordata)
+
+.form-group
+    label(for='subject') Subject
+    input#subject.form-control(type='text', name='subject', placeholder='Subject of the message', required=true, value=values.subject, class={'is-invalid': errors && errors.subject})
+    small.form-text.text-muted Subject line of the message.
+    if errors && errors.subject
+        .invalid-feedback= errors.subject
+
+.form-group
+    label Recipients:
+        = " "
+        a(href='/lists/view/' + listData._id, target='_blank')
+            strong #{listData.name}
+        = " "
+        | (#{msg('{N, plural, =0 {no subscribers} one {1 subscriber} other {# subscribers}}',{N: listData.subscribers})})
+
+.form-group
+
+    div.dropdown.float-right.mm-hidden#mm-editor-insert-div
+        button.btn.btn-secondary.dropdown-toggle(type="button", data-toggle="dropdown") Insert field value
+        div.dropdown-menu
+            for field in fields
+                a.dropdown-item.mm-editor-insert(href='#', data-value="{{"+field.key+"}}")= field.name
+
+    label(for='editor') Message contents
+    div.clearfix
+
+    div#editor.mt-1(style='height: 350px')
+    small.form-text.text-muted Write your message here using <a href="https://handlebarsjs.com/" target="_blank">Handlebars syntax</a>
+    if errors && errors.contents
+        small.text-danger= errors.contents
+
+.form-group
+    label(for='template') Base template
+    select#template.form-control(name='template', class={'is-invalid': errors && errors.template})
+        option(value='') Default
+        for template in templates
+            option(value=template._id, selected=values.template == template._id)
+                | #{template.name}
+    small.form-text.text-muted Base template to where the message contents are inserted. Manage templates <a href="/templates">here</a>
+    if errors && errors.template
+        .invalid-feedback= errors.template
+
+div.form-group.form-check
+    input.form-check-input#text-only(type='checkbox', name='textOnly', checked=values.textOnly)
+    label.form-check-label(for="text-only") Plaintext
+    small.form-text.text-muted Do not use HTML formatted content
+
+div.form-group.form-check
+    input.form-check-input#disable-tracking(type='checkbox', name='disableTracking', checked=values.disableTracking)
+    label.form-check-label(for="disable-tracking") Disable tracking
+    small.form-text.text-muted Turn off subscriber tracking for opens and clicks
+
+div.form-group.form-check
+    input.form-check-input#use-code-editor(type='checkbox', name='useCodeEditor', checked=values.useCodeEditor)
+    label.form-check-label(for="use-code-editor") Use HTML code editor
+    small.form-text.text-muted Check this if you prefer HTML code editor instead of WYSIWYG to edit this message
+
+script.
+    var mergefields = !{JSON.stringify(fields)};
+    var editordata = !{editordata};

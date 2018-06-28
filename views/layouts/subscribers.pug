@@ -1,0 +1,44 @@
+- var messages = flash() //- fetch pending alerts
+
+include ../mixins.pug
+
+doctype html
+html(lang='en')
+    head
+
+        // Required meta tags
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+
+        if title
+            title= appname +' | ' + title
+        else
+            title= appname
+
+        block css
+            link(href='/css/styles.css', rel='stylesheet')
+
+    body
+        input#mm-user-locale(type='hidden', value=locale)
+
+        .container(style='margin-top: 60px;')
+
+            include ../partials/flash-messages.pug
+
+            if listData && listData.header
+                div.mt-3 !{listData.header}
+                div.mt-3
+
+            block content
+                //- placeholder that is replaced by child templates
+
+        block footer
+            div.mt-3 &nbsp;
+            footer.footer
+                .container
+                    span.text-muted #{appname} is powered by
+                        = " "
+                        a(href='https://github.com/andris9/minimail') Minimail
+
+        block scripts
+            script(src='/app/bundle.js')

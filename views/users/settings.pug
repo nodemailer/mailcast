@@ -1,0 +1,20 @@
+extends ../layouts/main.pug
+
+block content
+    if error
+        +alert('danger', error)
+
+    include user-header
+
+    form(method='post', action='/users/settings')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        div.form-group.form-check
+            input.form-check-input#allow-join(type='checkbox', name='global_user_disableJoin', checked=values.global_user_disableJoin)
+            label.form-check-label(for="allow-join") Disable public signups
+            small.form-text.text-muted If not checked then anyone can click on the "Join" link and create an account
+
+        .form-group
+            button.btn.btn-primary(type='submit') Update settings
+            = " "
+            a.btn.btn-warning(href='/users') Cancel

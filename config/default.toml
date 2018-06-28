@@ -1,0 +1,37 @@
+
+
+# Process title
+title="minimail"
+processes=2
+
+# Can be overriden in the UI by admin
+appname="Minimail"
+
+[process]
+# @include "user.toml"
+
+[www]
+secret="secret cat"
+postsize="5MB"
+host=false
+port=3002
+proxy=false
+secure=false # if true uses secure cookies
+
+[log]
+level="silly"
+www=':remote-addr [:date[iso]] :site-user ":method :url HTTP/:http-version" :status :res[content-length]'
+
+[dbs]
+# @include "dbs.toml"
+
+[nodemailer]
+defaultFrom="Minimail <i6c277lnz3uxwmmj@ethereal.email>"
+
+[mta]
+# Load MTA config
+# @include "mta/minimta.toml"
+
+[verp]
+# Load VERP MX config
+# @include "verp.toml"

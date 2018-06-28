@@ -1,0 +1,13 @@
+/var/log/minimail/minimail.log {
+    daily
+    ifempty
+    missingok
+    rotate 30
+    compress
+    create 640 syslog adm
+    su root root
+    sharedscripts
+    postrotate
+        systemctl kill --signal=SIGHUP --kill-who=main rsyslog.service 2>/dev/null || true
+    endscript
+}

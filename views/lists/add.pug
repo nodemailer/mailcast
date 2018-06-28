@@ -1,0 +1,25 @@
+extends ../layouts/main.pug
+
+block content
+
+    if error
+        +alert('danger', error)
+
+    include list-main-header
+
+    form(method='post', action='/lists/add')
+        input(type='hidden', name='_csrf', value=csrf)
+
+        include ./list-form.pug
+
+        .form-group
+            label(for='fields') Custom fields
+            textarea#fields.form-control(name='fields', placeholder='Where did you hear from us?', rows=5, class={'is-invalid': errors && errors.fields})= values.fields
+            small.form-text.text-muted One field name per line. Every field gets its own textbox in the subscription form.
+            if errors && errors.fields
+                .invalid-feedback= errors.fields
+
+        .form-group
+            button.btn.btn-primary(type="submit") Create a list
+            = " "
+            a.btn.btn-warning(href='/lists') Cancel

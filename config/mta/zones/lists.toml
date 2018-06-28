@@ -1,0 +1,6 @@
+[lists]
+preferIPv6=false
+ignoreIPv6=true
+processes=2
+connections=5
+pool="default"

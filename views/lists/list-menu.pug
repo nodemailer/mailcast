@@ -1,0 +1,10 @@
+nav.nav.nav-tabs
+    li.nav-item
+        a.nav-link(href='/lists/view/'+listData._id, class={'active': listPage=='view'}) Subscribers
+    li.nav-item
+        a.nav-link(href='/lists/fields/'+listData._id, class={'active': listPage=='fields'}) Form fields
+    li.nav-item
+        a.nav-link(href='/lists/edit/'+listData._id, class={'active': listPage=='edit'}) Settings
+    if listPage=='manage'
+        li.nav-item
+            a.nav-link.active(href='#')= title

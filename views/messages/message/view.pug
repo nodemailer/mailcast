@@ -1,0 +1,68 @@
+extends ../../layouts/main.pug
+
+block content
+
+    input#mm-message-id(type='hidden', value=messageData._id)
+
+    if error
+        +alert('danger', error)
+
+    include header
+
+    if messageData.draft
+        form
+            .form-group
+                button.btn.btn-primary(type="button", data-toggle="modal", data-target="#mm-send-confirm" disabled=!listData.subscribers) Send to #{msg('{N, plural, =0 {0 subscribers} one {1 subscriber} other {# subscribers}}',{N: listData.subscribers})}
+                =" "
+                button.btn.btn-warning(type="button", data-toggle="modal", data-target="#mm-test-confirm" disabled=!listData.subscribers) Send to test subscribers
+
+        form(method='post', action='/messages/send')
+            input(type='hidden', name='_csrf', value=csrf)
+            input(type='hidden', name='message', value=message)
+            input(type='hidden', name='test', value='true')
+            +confirm('mm-test-confirm', 'Send message', 'Are you sure you want to send "'+messageData.subject+'" to test subscribers?', 'No, cancel', 'Yes, schedule sending')
+
+        form(method='post', action='/messages/send')
+            input(type='hidden', name='_csrf', value=csrf)
+            input(type='hidden', name='message', value=message)
+            +confirm('mm-send-confirm', 'Send message', 'Are you sure you want to send "'+messageData.subject+'" to '+msg('{N, plural, =0 {no-one} one {1 subscriber} other {# subscribers}}',{N: listData.subscribers})+'?', 'No, cancel', 'Yes, schedule sending')
+
+    if progress
+        div.progress(style='height: 20px;')
+            div.progress-bar#mm-progress(style='width:'+ progress)= progress
+
+    if status
+        div.row.mt-3
+            div.col-3.col-sm-2.col-md-2.col-lg-1
+                strong Total
+            div.col-3.col-sm-2.col-md-1.text-right
+                span.monospace#mm-counter-queued(data-toggle="tooltip", title="How many emails were generated to be sent for this message", style="cursor:default")= num(status.queued)
+            div.col-6.col-md-8
+                span.text-muted.mm-status-info(data-status="queueing", class={'mm-hidden':messageData.status !== 'queueing'}, data-toggle="tooltip", title="Messages are being prepared for sending", style="cursor:default") queueing messages…
+                span.text-muted.mm-status-info(data-status="sent", class={'mm-hidden':messageData.status !== 'sent'}, data-toggle="tooltip", title="Messages are queued but not sending yet", style="cursor:default") all messages queued, ready to send…
+        div.row
+            div.col-3.col-sm-2.col-md-2.col-lg-1
+                strong Delivered
+            div.col-3.col-sm-2.col-md-1.text-right
+                span.monospace#mm-counter-delivered(data-toggle="tooltip", title="How many emails were accepted by target MX servers. Accepted messages might still bounce.", style="cursor:default")= num(status.delivered)
+        div.row
+            div.col-3.col-sm-2.col-md-2.col-lg-1
+                strong Rejected
+            div.col-3.col-sm-2.col-md-1.text-right
+                span.monospace#mm-counter-rejected(data-toggle="tooltip", title="How many emails were rejected by target MX servers for reasons like unknown or deleted user", style="cursor:default")= num(status.rejected)
+        div.row
+            div.col-3.col-sm-2.col-md-2.col-lg-1
+                strong Blacklisted
+            div.col-3.col-sm-2.col-md-1.text-right
+                span.monospace#mm-counter-blacklisted(data-toggle="tooltip", title="How many emails were rejected by target MX servers because your sending IP is blacklisted", style="cursor:default")= num(status.blacklisted)
+        div.row
+            div.col-3.col-sm-2.col-md-2.col-lg-1
+                strong Bounced
+            div.col-3.col-sm-2.col-md-1.text-right
+                span.monospace#mm-counter-bounced(data-toggle="tooltip", title="How many bounce emails were sent by target MX servers. These messages were initially accepted but eventually bounced", style="cursor:default")= num(status.bounced)
+
+block append scripts
+    script.
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })

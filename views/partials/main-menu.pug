@@ -1,0 +1,62 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
+
+    if user
+        a.navbar-brand(href="/lists")= appname
+    else
+        a.navbar-brand(href="/account/login")= appname
+
+    button.navbar-toggler(type="button", data-toggle="collapse", data-target="#navbarSupportedContent")
+        span.navbar-toggler-icon
+
+    div.collapse.navbar-collapse#navbarSupportedContent
+
+        if user
+
+            ul.navbar-nav
+                //- menu items for logged in user
+
+                if user.status === 'admin'
+                    li.nav-item(class={'active': page=='users'})
+                        a.nav-link(href='/users') Users
+
+                li.nav-item(class={'active': page=='lists'})
+                    a.nav-link(href='/lists') Lists
+
+                li.nav-item(class={'active': page=='templates'})
+                    a.nav-link(href='/templates') Templates
+
+                li.nav-item(class={'active': page=='messages'})
+                    a.nav-link(href='/messages') Messages
+
+            div.mr-auto
+
+            ul.navbar-nav
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href='#', role="button", data-toggle="dropdown")
+                        span.oi.oi-person
+                        =" "
+                        | #{user.name}
+                    div.dropdown-menu.dropdown-menu-right
+                        a.dropdown-item(href='/account/settings', class={'active': page=='settings'})
+                            span.oi.oi-cog
+                            =" Settings"
+                        a.dropdown-item(href='/account/logout')
+                            span.oi.oi-account-logout
+                            =" Log Out"
+
+        else
+            div.mr-auto
+
+            ul.navbar-nav
+                //- menu items for anonymous user
+
+                if !disableJoin
+                    li.nav-item(class={'active': page=='join'})
+                        a.nav-link(href='/account/join')
+                            span.oi.oi-person
+                            =" Join"
+
+                li.nav-item(class={'active': page=='login'})
+                    a.nav-link(href='/account/login')
+                        span.oi.oi-account-login
+                        =" Log In"

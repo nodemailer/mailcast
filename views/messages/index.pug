@@ -1,0 +1,43 @@
+extends ../layouts/main.pug
+
+block content
+
+    include message-header
+
+    if !messageList.length
+
+        p No messages created so far,
+            = " "
+            a(href='/messages/add') compose one here
+            |.
+
+    else
+
+        table.table.mt-3
+            thead
+                tr
+                    th #
+                    th Subject
+                    th Recipients
+                    th Status
+                    th Created
+                    th &nbsp;
+            tbody
+                for messageData in messageList
+                    tr
+                        th= messageData.nr
+                        td
+                            a(href='/messages/view/' + messageData._id)
+                                span.oi.oi-envelope-closed
+                                = " " + messageData.subject
+                        td
+                            if messageData.listData
+                                a(href='/lists/view/' + messageData.list)= messageData.listData.name
+                                =" "
+                                | (#{msg('{N, plural, =0 {no subscribers} one {1 subscriber} other {# subscribers}}',{N: messageData.listData.subscribers})})
+                        td= messageData.status
+                        td= messageData.createdStr
+                        td
+                            a(href='/messages/edit/'+messageData._id) Edit
+
+    +paging(curpage, pages, pagingUrl)

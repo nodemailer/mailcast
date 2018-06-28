@@ -1,0 +1,14 @@
+div.float-right
+    div.dropdown
+        button.btn.btn-info.dropdown-toggle(type="button", data-toggle="dropdown") List actions
+        div.dropdown-menu
+            a.dropdown-item(href='/messages/add?list=' + list) Compose new message
+            a.dropdown-item(href='/subscribers/subscribe/' + list, target='_blank') Subscription form
+            a.dropdown-item(href='/lists/subscribers/' + list + '/add') Add subscriber
+
+h2= listData.name
+p.lead= listData.description
+
+include list-menu.pug
+
+div.clearfix.mt-3

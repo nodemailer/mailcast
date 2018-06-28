@@ -1,0 +1,4 @@
+["minimail"]
+enabled=["receiver", "main", "sender"]
+
+# @include "../../dbs.toml"
