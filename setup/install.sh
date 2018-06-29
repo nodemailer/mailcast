@@ -124,7 +124,7 @@ rm -rf /etc/systemd/system/minimail.service
 
 mkdir -p "$APP_ROOT"
 cd "$APP_ROOT"
-git clone git://github.com/nodemailer/minimail.git .
+git clone git@github.com:nodemailer/minimail.git .
 
 # application config
 cp -r "$APP_ROOT/config" /etc/minimail
