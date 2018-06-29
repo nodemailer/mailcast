@@ -2,12 +2,20 @@
 
 # NB! This install script works in Ubuntu 16+
 
+# Usage
+#  sudo ./install.sh [APPDOMAIN]
+#  sudo ./install.sh mailer.example.com
+
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
 
 set -e
+
+HOSTNAME=`hostname`
+APPDOMAIN=$1
+APPDOMAIN="${APPDOMAIN:-$HOSTNAME}"
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -34,6 +42,7 @@ else
     REDIS_PASSWORD=`pwgen 18 -1`
 
     echo "#!/bin/bash
+
 # MongoDB Admin User
 MONGO_ADMIN_USER=\"$MONGO_ADMIN_USER\"
 MONGO_ADMIN_PASSWORD=\"$MONGO_ADMIN_PASSWORD\"
@@ -43,8 +52,7 @@ MONGO_APP_USER=\"$MONGO_APP_USER\"
 MONGO_APP_PASSWORD=\"$MONGO_APP_PASSWORD\"
 
 # Redis password
-REDIS_PASSWORD=\"$REDIS_PASSWORD\"
-" > "$HOME/minimail.passwords"
+REDIS_PASSWORD=\"$REDIS_PASSWORD\"" > "$HOME/minimail.passwords"
 
     chmod 0400 "$HOME/minimail.passwords"
 fi
@@ -117,7 +125,9 @@ if [[ $INSTALL_LIST = *"mongodb-org"* ]]; then
 
 fi
 
-# TODO: set up code and services
+useradd minimail 2>/dev/null || true
+mkdir -p /home/minimail
+chown minimail:minimail /home/minimail
 
 # Remove existing service (if exists)
 systemctl stop minimail 2>/dev/null || true
@@ -129,6 +139,7 @@ cd "$APP_ROOT"
 git clone git@github.com:nodemailer/minimail.git .
 
 # application config
+rm -rf /etc/minimail
 cp -r "$APP_ROOT/config" /etc/minimail
 mv /etc/minimail/default.toml /etc/minimail/minimail.toml
 
@@ -139,16 +150,7 @@ cp "$APP_ROOT/setup/etc/systemd/system/minimail.service" /etc/systemd/system/min
 cp "$APP_ROOT/setup/etc/tmpfiles.d/minimail.conf" /etc/tmpfiles.d/minimail.conf
 
 sed -i -e "s#APP_ROOT#$APP_ROOT#g;s#NODE_PATH#`which node`#g;" /etc/systemd/system/minimail.service
-sed -i -e "s/secret cat/`pwgen 18 -1`/g;s/port=3002/port=80/g;" /etc/minimail/minimail.toml
-
-# Prepare log directory
-mkdir -p /var/log/minimail
-chown -R syslog:adm /var/log/minimail
-chmod 0750 /var/log/minimail
-
-useradd minimail 2>/dev/null || true
-mkdir -p /home/minimail
-chown minimail:minimail /home/minimail
+sed -i -e "s/secret cat/`pwgen 18 -1`/g;s/port=3002/port=80/g;s;#baseUrl=false;baseUrl=\"http://$APPDOMAIN\";g" /etc/minimail/minimail.toml
 
 # configure database options
 echo "redis=\"redis://127.0.0.1:6379/1?password=$REDIS_PASSWORD\"
@@ -158,7 +160,17 @@ sender=\"minimta\"" > /etc/minimail/dbs.toml
 echo "user=\"minimail\"
 group=\"www-data\"" > /etc/minimail/user.toml
 
+# Application folder permissions
 chown -R minimail:minimail "$APP_ROOT"
+
+# config folder permissions
+chown -R minimail:minimail /etc/minimail
+chmod -R 0750 /etc/minimail
+
+# Prepare log directory
+mkdir -p /var/log/minimail
+chown -R syslog:adm /var/log/minimail
+chmod 0750 /var/log/minimail
 
 # Install dependencies and build static assets
 sudo -H -u minimail npm install
