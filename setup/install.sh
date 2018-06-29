@@ -137,6 +137,7 @@ cp "$APP_ROOT/etc/systemd/system/minimail.service" /etc/systemd/system/minimail.
 cp "$APP_ROOT/etc/tmpfiles.d/minimail.conf" /etc/tmpfiles.d/minimail.conf
 
 sed -i -e "s#APP_ROOT#$APP_ROOT#g;" /etc/systemd/system/minimail.service
+sed -i -e "s/secret cat/`pwgen 18 -1`/g;s/port=3002/port=80/g;" /etc/minimail/minimail.toml
 
 # Prepare log directory
 mkdir -p /var/log/minimail

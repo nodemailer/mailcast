@@ -20,6 +20,12 @@ Minimail is simple. It is not targeted for marketing purposes, it is for simpler
 -   MongoDB
 -   Unblocked port 25 (some hosting providers block or limit usage of port 25)
 
+### Fast install
+
+Mailtrain can be configured to run on Ubuntu 16.04/18.04 using the included [install script](setup/install.sh). Run it as root in an emtpy VPS (empty meaning that you do not have anything using SMTP or HTTP ports).
+
+Installation sets up config folder to `/etc/minimail` and a systemd service called `minimail`
+
 ### Configuration
 
 Make all config changes to config/development.toml (not checked in to git, local only) using the same syntax as in default.toml. You only need to provide the values that you want tot override:

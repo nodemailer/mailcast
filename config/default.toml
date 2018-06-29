@@ -25,9 +25,6 @@ www=':remote-addr [:date[iso]] :site-user ":method :url HTTP/:http-version" :sta
 [dbs]
 # @include "dbs.toml"
 
-[nodemailer]
-defaultFrom="Minimail <i6c277lnz3uxwmmj@ethereal.email>"
-
 [mta]
 # Load MTA config
 # @include "mta/minimta.toml"
