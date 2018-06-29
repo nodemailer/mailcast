@@ -17,6 +17,7 @@ host=false
 port=3002
 proxy=false
 secure=false # if true uses secure cookies
+baseUrl=false # set to default application url, can be overriden in web interface
 
 [log]
 level="silly"

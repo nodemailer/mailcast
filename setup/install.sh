@@ -94,6 +94,8 @@ if [[ $INSTALL_LIST = *"mongodb-org"* ]]; then
     systemctl enable mongod
     systemctl start mongod
 
+    sleep 3 # just in case
+
     # Create admin user
     mongo admin --eval "db.createUser({
         user: '$MONGO_ADMIN_USER',
@@ -106,8 +108,8 @@ if [[ $INSTALL_LIST = *"mongodb-org"* ]]; then
 
     # Create application user
     mongo admin -u "$MONGO_ADMIN_USER" -p "$MONGO_ADMIN_PASSWORD" --eval "db.createUser({
-        user: '$MONGO_MAIL_USER',
-        pwd: '$MONGO_MAIL_PASSWORD',
+        user: '$MONGO_APP_USER',
+        pwd: '$MONGO_APP_PASSWORD',
         roles: [
             { role: 'readWrite', db: 'minimail' }
         ]
@@ -131,12 +133,12 @@ cp -r "$APP_ROOT/config" /etc/minimail
 mv /etc/minimail/default.toml /etc/minimail/minimail.toml
 
 # service files
-cp "$APP_ROOT/etc/logrotate.d/minimail" /etc/logrotate.d/minimail
-cp "$APP_ROOT/etc/rsyslog.d/25-minimail.conf" /etc/rsyslog.d/25-minimail.conf
-cp "$APP_ROOT/etc/systemd/system/minimail.service" /etc/systemd/system/minimail.service
-cp "$APP_ROOT/etc/tmpfiles.d/minimail.conf" /etc/tmpfiles.d/minimail.conf
+cp "$APP_ROOT/setup/etc/logrotate.d/minimail" /etc/logrotate.d/minimail
+cp "$APP_ROOT/setup/etc/rsyslog.d/25-minimail.conf" /etc/rsyslog.d/25-minimail.conf
+cp "$APP_ROOT/setup/etc/systemd/system/minimail.service" /etc/systemd/system/minimail.service
+cp "$APP_ROOT/setup/etc/tmpfiles.d/minimail.conf" /etc/tmpfiles.d/minimail.conf
 
-sed -i -e "s#APP_ROOT#$APP_ROOT#g;" /etc/systemd/system/minimail.service
+sed -i -e "s#APP_ROOT#$APP_ROOT#g;s#NODE_PATH#`which node`#g;" /etc/systemd/system/minimail.service
 sed -i -e "s/secret cat/`pwgen 18 -1`/g;s/port=3002/port=80/g;" /etc/minimail/minimail.toml
 
 # Prepare log directory
@@ -144,13 +146,22 @@ mkdir -p /var/log/minimail
 chown -R syslog:adm /var/log/minimail
 chmod 0750 /var/log/minimail
 
-# Install dependencies and build static assets
-npm install
+useradd minimail 2>/dev/null || true
+mkdir -p /home/minimail
+chown minimail:minimail /home/minimail
 
 # configure database options
 echo "redis=\"redis://127.0.0.1:6379/1?password=$REDIS_PASSWORD\"
 mongo=\"mongodb://$MONGO_APP_USER:$MONGO_APP_PASSWORD@127.0.0.1:27017/minimail?authSource=admin\"
 sender=\"minimta\"" > /etc/minimail/dbs.toml
+
+echo "user=\"minimail\"
+group=\"www-data\"" > /etc/minimail/user.toml
+
+chown -R minimail:minimail "$APP_ROOT"
+
+# Install dependencies and build static assets
+sudo -H -u minimail npm install
 
 # Start Minimail
 systemctl enable minimail

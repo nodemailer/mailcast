@@ -5,9 +5,9 @@ After=mongod.service redis.service
 
 [Service]
 Environment="NODE_ENV=production"
-WorkingDirectory=/opt/minimail
-ExecStart=node server.js --config="/etc/minimail/minimail.toml"
-ExecReload=kill -HUP $MAINPID
+WorkingDirectory=APP_ROOT
+ExecStart=NODE_PATH server.js --config="/etc/minimail/minimail.toml"
+ExecReload=/bin/kill -HUP $MAINPID
 Type=simple
 Restart=always
 SyslogIdentifier=minimail
