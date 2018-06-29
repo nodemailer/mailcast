@@ -175,6 +175,9 @@ chmod 0750 /var/log/minimail
 # Install dependencies and build static assets
 sudo -H -u minimail npm install
 
+# reload log options
+systemctl restart rsyslog 2>/dev/null || true
+
 # Start Minimail
 systemctl enable minimail
 systemctl start minimail
