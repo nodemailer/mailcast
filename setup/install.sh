@@ -182,4 +182,5 @@ systemctl restart rsyslog 2>/dev/null || true
 systemctl enable minimail
 systemctl start minimail
 
-echo "All done. See generated passwords in $HOME/minimail.passwords"
+echo "All done. Database passwords were stored to $HOME/minimail.passwords"
+echo "Open http://$APPDOMAIN/ in your browser to use Minimail"

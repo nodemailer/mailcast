@@ -18,7 +18,7 @@ Minimail is simple. It is not targeted for marketing purposes, it is for simpler
 -   Nodejs v8+
 -   Redis
 -   MongoDB
--   Unblocked port 25 (some hosting providers block or limit usage of port 25)
+-   Unblocked port 25 (some hosting providers block or limit usage of port 25 to prevent spam)
 
 ### Fast install
 
