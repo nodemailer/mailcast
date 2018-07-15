@@ -207,7 +207,7 @@ module.exports.update = async (message, updates, options) => {
         r = await db.client.collection('messages').findOneAndUpdate(query, updateData, queryOptions);
 
         if (options.publish && r && r.value) {
-            db.redis.publish('minimail.' + r.value._id, JSON.stringify(r.value));
+            db.redis.publish('mailcast.' + r.value._id, JSON.stringify(r.value));
         }
     } catch (err) {
         let error = new Error('Failed to update message, database error');
@@ -269,7 +269,7 @@ class Sub {
     }
 
     async subscribe(message, handler) {
-        let channel = 'minimail.' + (message || '').toString();
+        let channel = 'mailcast.' + (message || '').toString();
 
         if (this.subscriptions.has(channel)) {
             this.subscriptions.get(channel).add(handler);
@@ -289,7 +289,7 @@ class Sub {
                 let handlers = this.subscriptions.get(channel);
                 handlers.delete(handler);
                 if (!handlers.size) {
-                    await this.redis.unsubscribe('minimail.' + channel);
+                    await this.redis.unsubscribe('mailcast.' + channel);
                     this.subscriptions.delete(channel);
                     return 0;
                 }

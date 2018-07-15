@@ -8,6 +8,6 @@ window.$ = window.jQuery = $;
 import 'bootstrap';
 import 'event-source-polyfill';
 
-import './js/minimail.js';
+import './js/mailcast.js';
 import './js/actions.js';
 import './js/message.js';

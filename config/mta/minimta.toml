@@ -1,6 +1,6 @@
 # This is the main config file for MTA
 
-name="MinimailMTA"
+name="MailcastMTA"
 
 # Process identifier
 ident="minimta"

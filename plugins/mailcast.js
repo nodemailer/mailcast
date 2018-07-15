@@ -4,7 +4,7 @@ const ObjectID = require('mongodb').ObjectID;
 const tools = require('../lib/tools');
 const mailModel = require('../models/mail');
 
-module.exports.title = 'Minimail';
+module.exports.title = 'Mailcast';
 module.exports.init = function(app, done) {
     let db = app.db.database;
 

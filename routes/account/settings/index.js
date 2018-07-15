@@ -8,6 +8,7 @@ const tools = require('../../../lib/tools');
 const timezones = require('../../../lib/timezones').timezones;
 const userModel = require('../../../models/user');
 const settingsModel = require('../../../models/settings');
+const emails = require('../../../lib/emails');
 const router = new express.Router();
 
 const localeCodes = locales.map(locale => locale.code);
@@ -359,6 +360,24 @@ router.post(
 
         req.flash('success', 'Site settings updated');
         res.redirect('/account/settings/site');
+    })
+);
+
+router.post(
+    '/api/resend-validation',
+    tools.asyncify(async (req, res) => {
+        let userData = await userModel.get(req.user._id);
+        if (!userData) {
+            return userModel.showJSONErrors(req, res, new Error('Failed to load user data'));
+        }
+
+        if (!userData.emailValidated) {
+            setImmediate(() => emails.emailValidation(userData).catch(() => false));
+        }
+
+        res.json({
+            success: true
+        });
     })
 );
 

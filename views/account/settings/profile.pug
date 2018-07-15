@@ -11,6 +11,11 @@ block content
             label(for='email') Email address
             input#email.form-control-plaintext(type='text', readonly=true, value=user.email)
 
+            if !user.emailValidated
+                div.mt-3.alert.alert-warning Your email address <em>#{user.email}</em> is not yet validated. You can not send campaigns with an unvalidated account.
+                    =" "
+                    a.alert-link.mm-action(href='#', data-mm-event='click', data-mm-action='resendValidation') Resend validation link
+
         .form-group
             label(for='name') Your name
             input#name.form-control(type='name', name='name', placeholder='Your name', required=true, value=values.name, class={'is-invalid': errors && errors.name})

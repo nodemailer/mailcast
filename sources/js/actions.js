@@ -1,12 +1,49 @@
+let posting = false;
+
 let actions = {
-    showMessagePreview() {
-        let payload = {
-            subject: document.querySelector('#subject').value || '',
-            contents: document.querySelector('.ql-editor').innerHTML || '',
-            template: document.querySelector('#template').value || ''
+    resendValidation: function() {
+        if (posting) {
+            return;
+        }
+        posting = true;
+
+        let form = {
+            _csrf: document.getElementById('_csrf').value
         };
 
-        console.log(JSON.stringify(payload, false, 2));
+        let handleResultError = function(message) {
+            alert(message);
+        };
+
+        let handleResultSuccess = function(message) {
+            alert(message);
+        };
+
+        fetch('/account/settings/api/resend-validation', {
+            method: 'post',
+            headers: {
+                Accept: 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify(form)
+        })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(result) {
+                posting = false;
+                if (!result.success) {
+                    return handleResultError(result.error);
+                }
+
+                handleResultSuccess('Validation email sent to account address.');
+            })
+            .catch(function(err) {
+                posting = false;
+                console.error(err);
+                handleResultError('Failed to post data to server');
+            });
     }
 };
 
@@ -16,7 +53,7 @@ for (let i = 0, len = actionElms.length; i < len; i++) {
     if (actionElm.dataset.mmEvent && actionElm.dataset.mmAction && typeof actions[actionElm.dataset.mmAction] === 'function') {
         actionElm.addEventListener(
             actionElm.dataset.mmEvent,
-            e => {
+            function(e) {
                 e.preventDefault();
                 actions[actionElm.dataset.mmAction](e);
             },

@@ -15,7 +15,7 @@ let numformat = function(num) {
     return numformatMsg({ N: num });
 };
 
-let updateStatus = status => {
+let updateStatus = function(status) {
     let statusElms = document.querySelectorAll('.mm-status-info');
     for (let i = 0, len = statusElms.length; i < len; i++) {
         let elm = statusElms[i];
@@ -27,7 +27,7 @@ let updateStatus = status => {
     }
 };
 
-let init = () => {
+let init = function() {
     let message = ((document.getElementById('mm-message-id') || {}).value || '').trim();
     if (!message || !/^[a-f0-9]{24}$/i.test(message)) {
         return;
@@ -36,7 +36,7 @@ let init = () => {
     let lastUpdate = 0;
     let updateTimer = false;
     let updateValues = function(data) {
-        Object.keys((data && data.counters) || {}).forEach(key => {
+        Object.keys((data && data.counters) || {}).forEach(function(key) {
             let elm = document.getElementById('mm-counter-' + key);
             if (!elm) {
                 return;
@@ -78,7 +78,7 @@ let init = () => {
         if (updatediff >= 1000) {
             updateValues(data);
         } else {
-            updateTimer = setTimeout(() => {
+            updateTimer = setTimeout(function() {
                 updateValues(data);
             }, 300);
         }

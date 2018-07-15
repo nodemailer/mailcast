@@ -1,11 +1,11 @@
 
 
 # Process title
-title="minimail"
+title="mailcast"
 processes=2
 
 # Can be overriden in the UI by admin
-appname="Minimail"
+appname="Mailcast"
 
 [process]
 # @include "user.toml"

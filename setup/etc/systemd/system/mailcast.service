@@ -1,16 +1,16 @@
 [Unit]
-Description=Minimail Mailing List Manager
+Description=Mailcast Mailing List Manager
 Conflicts=sendmail.service exim.service postfix.service
 After=mongod.service redis.service
 
 [Service]
 Environment="NODE_ENV=production"
 WorkingDirectory=APP_ROOT
-ExecStart=NODE_PATH server.js --config="/etc/minimail/minimail.toml"
+ExecStart=NODE_PATH server.js --config="/etc/mailcast/mailcast.toml"
 ExecReload=/bin/kill -HUP $MAINPID
 Type=simple
 Restart=always
-SyslogIdentifier=minimail
+SyslogIdentifier=mailcast
 
 [Install]
 WantedBy=multi-user.target

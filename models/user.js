@@ -411,3 +411,26 @@ module.exports.delete = async user => {
 
     return true;
 };
+
+module.exports.showJSONErrors = (req, res, err) => {
+    let response = {
+        success: false,
+        error: err.message
+    };
+
+    if (err.code) {
+        response.errorCode = err.code;
+    }
+
+    if (err && err.details) {
+        err.details.forEach(detail => {
+            if (!response.details || !response.details[detail.path]) {
+                if (!response.details) {
+                    response.details = {};
+                }
+                response.details[detail.path] = detail.message;
+            }
+        });
+    }
+    res.json(response);
+};

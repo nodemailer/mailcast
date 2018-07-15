@@ -1,4 +1,4 @@
-/var/log/minimail/minimail.log {
+/var/log/mailcast/mailcast.log {
     daily
     ifempty
     missingok

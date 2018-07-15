@@ -23,21 +23,21 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get -q -y install software-properties-common lsb-release wget python pwgen
 
-APP_ROOT="/opt/minimail"
+APP_ROOT="/opt/mailcast"
 MONGODB="3.6"
 CODENAME=`lsb_release -c -s`
 NODEREPO="node_10.x"
 
 # Load or generate passwords for databases
-if [ -f "$HOME/minimail.passwords" ]; then
+if [ -f "$HOME/mailcast.passwords" ]; then
     echo "Found password file"
-    source "$HOME/minimail.passwords"
+    source "$HOME/mailcast.passwords"
 else
     echo "Password file not found, generating new passwords"
 
     MONGO_ADMIN_USER="admin"
     MONGO_ADMIN_PASSWORD=`pwgen 18 -1`
-    MONGO_APP_USER="minimail"
+    MONGO_APP_USER="mailcast"
     MONGO_APP_PASSWORD=`pwgen 18 -1`
     REDIS_PASSWORD=`pwgen 18 -1`
 
@@ -52,9 +52,9 @@ MONGO_APP_USER=\"$MONGO_APP_USER\"
 MONGO_APP_PASSWORD=\"$MONGO_APP_PASSWORD\"
 
 # Redis password
-REDIS_PASSWORD=\"$REDIS_PASSWORD\"" > "$HOME/minimail.passwords"
+REDIS_PASSWORD=\"$REDIS_PASSWORD\"" > "$HOME/mailcast.passwords"
 
-    chmod 0400 "$HOME/minimail.passwords"
+    chmod 0400 "$HOME/mailcast.passwords"
 fi
 
 # start gathering packages to be installed
@@ -119,68 +119,68 @@ if [[ $INSTALL_LIST = *"mongodb-org"* ]]; then
         user: '$MONGO_APP_USER',
         pwd: '$MONGO_APP_PASSWORD',
         roles: [
-            { role: 'readWrite', db: 'minimail' }
+            { role: 'readWrite', db: 'mailcast' }
         ]
     });"
 
 fi
 
-useradd minimail 2>/dev/null || true
-mkdir -p /home/minimail
-chown minimail:minimail /home/minimail
+useradd mailcast 2>/dev/null || true
+mkdir -p /home/mailcast
+chown mailcast:mailcast /home/mailcast
 
 # Remove existing service (if exists)
-systemctl stop minimail 2>/dev/null || true
-systemctl disable minimail 2>/dev/null || true
-rm -rf /etc/systemd/system/minimail.service
+systemctl stop mailcast 2>/dev/null || true
+systemctl disable mailcast 2>/dev/null || true
+rm -rf /etc/systemd/system/mailcast.service
 
 mkdir -p "$APP_ROOT"
 cd "$APP_ROOT"
-git clone git@github.com:nodemailer/minimail.git .
+git clone git@github.com:nodemailer/mailcast.git .
 
 # application config
-rm -rf /etc/minimail
-cp -r "$APP_ROOT/config" /etc/minimail
-mv /etc/minimail/default.toml /etc/minimail/minimail.toml
+rm -rf /etc/mailcast
+cp -r "$APP_ROOT/config" /etc/mailcast
+mv /etc/mailcast/default.toml /etc/mailcast/mailcast.toml
 
 # service files
-cp "$APP_ROOT/setup/etc/logrotate.d/minimail" /etc/logrotate.d/minimail
-cp "$APP_ROOT/setup/etc/rsyslog.d/25-minimail.conf" /etc/rsyslog.d/25-minimail.conf
-cp "$APP_ROOT/setup/etc/systemd/system/minimail.service" /etc/systemd/system/minimail.service
-cp "$APP_ROOT/setup/etc/tmpfiles.d/minimail.conf" /etc/tmpfiles.d/minimail.conf
+cp "$APP_ROOT/setup/etc/logrotate.d/mailcast" /etc/logrotate.d/mailcast
+cp "$APP_ROOT/setup/etc/rsyslog.d/25-mailcast.conf" /etc/rsyslog.d/25-mailcast.conf
+cp "$APP_ROOT/setup/etc/systemd/system/mailcast.service" /etc/systemd/system/mailcast.service
+cp "$APP_ROOT/setup/etc/tmpfiles.d/mailcast.conf" /etc/tmpfiles.d/mailcast.conf
 
-sed -i -e "s#APP_ROOT#$APP_ROOT#g;s#NODE_PATH#`which node`#g;" /etc/systemd/system/minimail.service
-sed -i -e "s/secret cat/`pwgen 18 -1`/g;s/port=3002/port=80/g;s;#baseUrl=false;baseUrl=\"http://$APPDOMAIN\";g" /etc/minimail/minimail.toml
+sed -i -e "s#APP_ROOT#$APP_ROOT#g;s#NODE_PATH#`which node`#g;" /etc/systemd/system/mailcast.service
+sed -i -e "s/secret cat/`pwgen 18 -1`/g;s/port=3002/port=80/g;s;#baseUrl=false;baseUrl=\"http://$APPDOMAIN\";g" /etc/mailcast/mailcast.toml
 
 # configure database options
 echo "redis=\"redis://127.0.0.1:6379/1?password=$REDIS_PASSWORD\"
-mongo=\"mongodb://$MONGO_APP_USER:$MONGO_APP_PASSWORD@127.0.0.1:27017/minimail?authSource=admin\"
-sender=\"minimta\"" > /etc/minimail/dbs.toml
+mongo=\"mongodb://$MONGO_APP_USER:$MONGO_APP_PASSWORD@127.0.0.1:27017/mailcast?authSource=admin\"
+sender=\"minimta\"" > /etc/mailcast/dbs.toml
 
-echo "user=\"minimail\"
-group=\"www-data\"" > /etc/minimail/user.toml
+echo "user=\"mailcast\"
+group=\"www-data\"" > /etc/mailcast/user.toml
 
 # Application folder permissions
-chown -R minimail:minimail "$APP_ROOT"
+chown -R mailcast:mailcast "$APP_ROOT"
 
 # config folder permissions
-chown -R minimail:minimail /etc/minimail
-chmod -R 0750 /etc/minimail
+chown -R mailcast:mailcast /etc/mailcast
+chmod -R 0750 /etc/mailcast
 
 # Prepare log directory
-mkdir -p /var/log/minimail
-chown -R syslog:adm /var/log/minimail
-chmod 0750 /var/log/minimail
+mkdir -p /var/log/mailcast
+chown -R syslog:adm /var/log/mailcast
+chmod 0750 /var/log/mailcast
 
 # Install dependencies and build static assets
-sudo -H -u minimail npm install
+sudo -H -u mailcast npm install
 
 # reload log options
 systemctl restart rsyslog 2>/dev/null || true
 
-# Start Minimail
-systemctl enable minimail
-systemctl start minimail
+# Start Mailcast
+systemctl enable mailcast
+systemctl start mailcast
 
-echo "All done. Database passwords were stored to $HOME/minimail.passwords"
-echo "Open http://$APPDOMAIN/ in your browser to use Minimail"
+echo "All done. Database passwords were stored to $HOME/mailcast.passwords"
+echo "Open http://$APPDOMAIN/ in your browser to use Mailcast"

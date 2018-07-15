@@ -193,7 +193,7 @@ module.exports.updateStatus = async (db, email, status, logInfo) => {
                 }
             );
             if (updated && updated.value) {
-                db.redis.publish('minimail.' + r.value.message, JSON.stringify(updated.value));
+                db.redis.publish('mailcast.' + r.value.message, JSON.stringify(updated.value));
             }
         } catch (err) {
             // ignore

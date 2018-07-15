@@ -41,7 +41,7 @@ app.use(cookieParser());
 
 app.use(
     session({
-        name: 'minimail',
+        name: 'mailcast',
         store: new RedisStore({
             client: db.redis.duplicate()
         }),
@@ -80,6 +80,12 @@ app.use((req, res, next) => {
 app.use(
     bodyParser.urlencoded({
         extended: true,
+        limit: config.www.postsize
+    })
+);
+
+app.use(
+    bodyParser.json({
         limit: config.www.postsize
     })
 );

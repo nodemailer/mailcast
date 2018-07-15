@@ -22,6 +22,10 @@ router.use((req, res, next) => {
     }
 
     if (!req.user) {
+        if (/\/api/.test(req.url)) {
+            return userModel.showJSONErrors(req, res, new Error('Not logged in'));
+        }
+
         req.flash('danger', 'Not logged in');
         return res.redirect('/account/login');
     }

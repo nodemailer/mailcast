@@ -1,5 +1,5 @@
 {
-    "name": "minimail",
+    "name": "mailcast",
     "private": true,
     "version": "1.0.0",
     "main": "app.js",
@@ -12,15 +12,15 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/andris9/minimail.git"
+        "url": "git+https://github.com/andris9/mailcast.git"
     },
     "keywords": [],
     "author": "Andris Reinman",
     "license": "EUPL-1.1+",
     "bugs": {
-        "url": "https://github.com/andris9/minimail/issues"
+        "url": "https://github.com/andris9/mailcast/issues"
     },
-    "homepage": "https://github.com/andris9/minimail#readme",
+    "homepage": "https://github.com/andris9/mailcast#readme",
     "dependencies": {
         "baunsu": "0.2.3",
         "bcryptjs": "2.4.3",
@@ -36,7 +36,7 @@
         "express": "4.16.3",
         "express-session": "1.15.6",
         "generate-password": "1.4.0",
-        "geoip-lite": "1.2.2",
+        "geoip-lite": "1.3.1",
         "gravatar-url": "2.0.0",
         "handlebars": "4.0.11",
         "ioredfour": "1.0.2-ioredis",
@@ -53,14 +53,13 @@
         "messageformat": "2.0.2",
         "moment": "2.22.2",
         "moment-timezone": "0.5.21",
-        "mongodb": "3.0.10",
+        "mongodb": "3.1.1",
         "morgan": "1.9.0",
         "node-forge": "0.7.5",
-        "node-sass": "4.9.0",
         "nodemailer": "4.6.7",
         "nodemailer-openpgp": "1.2.0",
         "npmlog": "4.1.2",
-        "openpgp": "3.0.11",
+        "openpgp": "3.0.13",
         "popper.js": "1.14.3",
         "pug": "2.0.3",
         "pwnedpasswords": "1.0.4",
@@ -68,21 +67,22 @@
         "seq-index": "1.1.0",
         "serve-favicon": "2.5.0",
         "smtp-server": "3.4.6",
-        "uuid": "3.2.1",
+        "uuid": "3.3.2",
         "wild-config": "1.3.6",
         "zone-mta": "1.9.0",
         "zonemta-limiter": "1.0.0"
     },
     "devDependencies": {
-        "bootstrap": "4.1.1",
+        "bootstrap": "4.1.2",
         "eslint-config-nodemailer": "1.2.0",
         "grunt": "1.0.3",
         "grunt-cli": "1.2.0",
         "grunt-eslint": "21.0.0",
-        "grunt-sass": "2.1.0",
+        "grunt-sass": "3.0.1",
+        "node-sass": "^4.9.2",
         "source-map": "0.7.3",
         "uglifyjs-webpack-plugin": "1.2.7",
-        "webpack": "4.12.1",
+        "webpack": "4.16.0",
         "webpack-cli": "3.0.8"
     }
 }
