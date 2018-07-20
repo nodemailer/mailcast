@@ -6,7 +6,7 @@ block content
     if error
         +alert('danger', error)
 
-    form(method='post', action='/subscribers/subscribe')
+    form.mm-captcha-form(method='post', action='/subscribers/subscribe')
         input(type='hidden', name='_csrf', value=csrf)
         input(type='hidden', name='list', value=list)
         input(type='hidden', name='tz', value=values.tz, class={'mm-tz-detect': !values.tz})
@@ -15,4 +15,7 @@ block content
         include ./form.pug
 
         .form-group
-            button.btn.btn-primary(type="submit") Subscribe
+            if recaptcha
+                button.btn.btn-primary.g-recaptcha(data-sitekey=recaptcha, data-callback="onCreateSubmit") Subscribe
+            else
+                button.btn.btn-primary(type="submit") Subscribe

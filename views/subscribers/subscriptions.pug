@@ -1,0 +1,26 @@
+extends ../layouts/subscribers.pug
+
+block content
+    h3 List my subscriptions
+
+    if error
+        +alert('danger', error)
+
+    p.lead Receive a link to list all your subscriptions in this server
+
+    form.mm-captcha-form(method='post', action='/subscribers/subscriptions')
+        input(type='hidden', name='_csrf', value=csrf)
+        input.mm-clear(type='hidden', name='e', value='1')
+
+        .form-group
+            label(for='email') Email address
+            input#email.form-control(type='email', name='email', placeholder='Your email', required=true, value=values.email, class={'is-invalid': errors && errors.email})
+            small.form-text.text-muted An email with link to your subscriptions will be sent to this address
+            if errors && errors.email
+                .invalid-feedback= errors.email
+
+        .form-group
+            if recaptcha
+                button.btn.btn-primary.g-recaptcha(data-sitekey=recaptcha, data-callback="onCreateSubmit") Send link
+            else
+                button.btn.btn-primary(type="submit") Send link

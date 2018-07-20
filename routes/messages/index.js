@@ -520,6 +520,12 @@ router.post(
             return res.redirect('/messages/view/' + result.value.message);
         }
 
+        let userData = await userModel.get(req.user._id, { emailValidated: true });
+        if (!userData.emailValidated) {
+            req.flash('danger', 'Your email address is not yet validated');
+            return res.redirect('/messages/view/' + result.value.message);
+        }
+
         if (result.value.test) {
             await messageRenderer.processMessage(false, messageData, true);
             req.flash('success', 'Test messages scheduled for sending');

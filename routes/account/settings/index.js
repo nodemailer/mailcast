@@ -304,7 +304,29 @@ router.post(
             resetDkim: Joi.boolean()
                 .truthy(['Y', 'true', 'yes', 'on', 1])
                 .falsy(['N', 'false', 'no', 'off', 0, ''])
-                .default(false)
+                .default(false),
+            global_site_recaptchaEnabled: Joi.boolean()
+                .truthy(['Y', 'true', 'yes', 'on', 1])
+                .falsy(['N', 'false', 'no', 'off', 0, ''])
+                .default(false),
+            global_site_recaptchaSiteKey: Joi.string()
+                .empty('')
+                .trim()
+                .max(256)
+                .label('Recaptcha Site Key')
+                .when('global_site_recaptchaEnabled', {
+                    is: Joi.equal(true),
+                    then: Joi.required()
+                }),
+            global_site_recaptchaSecretKey: Joi.string()
+                .empty('')
+                .trim()
+                .max(256)
+                .label('Recaptcha Secret Key')
+                .when('global_site_recaptchaEnabled', {
+                    is: Joi.equal(true),
+                    then: Joi.required()
+                })
         });
 
         const result = Joi.validate(req.body, schema, {
@@ -376,7 +398,8 @@ router.post(
         }
 
         res.json({
-            success: true
+            success: true,
+            email: userData.email
         });
     })
 );

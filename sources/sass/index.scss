@@ -29,6 +29,10 @@ body {
     background-color: #f5f5f5;
 }
 
+.grecaptcha-badge {
+    z-index: 100;
+}
+
 .pgp-input,
 .monospace {
     font-family: monospace;

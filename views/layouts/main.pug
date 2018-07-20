@@ -42,7 +42,19 @@ html(lang='en')
             .container
                 span.text-muted #{appname} is powered by
                     = " "
-                    a(href='https://github.com/andris9/mailcast') Mailcast
+                    a(href='https://mailcast.app') Mailcast
+
+        div.modal#mm-alertbox
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        h5.modal-title.mm-alertbox-title
+                        button.close(type="button", data-dismiss="modal")
+                            span &times;
+                    div.modal-body
+                        p.mm-alertbox-body
+                    div.modal-footer
+                        button.btn.btn-secondary.mm-alertbox-btn(type="button", data-dismiss="modal") Close
 
         block scripts
             script(src='/app/bundle.js')

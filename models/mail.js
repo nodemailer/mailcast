@@ -32,7 +32,7 @@ module.exports.get = async (email, fields, options) => {
 
     if (emailData && options.user && emailData.user.toString() !== options.user.toString()) {
         let error = new Error('Not permitted to access selected email');
-        error.status = 503;
+        error.status = 403;
         throw error;
     }
 

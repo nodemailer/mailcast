@@ -31,7 +31,7 @@ module.exports.get = async (message, fields, options) => {
 
     if (messageData && options.user && messageData.user.toString() !== options.user.toString()) {
         let error = new Error('Not permitted to access selected message');
-        error.status = 503;
+        error.status = 403;
         throw error;
     }
 

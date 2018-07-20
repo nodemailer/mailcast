@@ -137,6 +137,10 @@ module.exports.create = async userData => {
             // first user is always an admin
             insertData.status = 'admin';
             firstUser = true;
+            if (!insertData.emailValidated) {
+                insertData.emailValidated = new Date();
+                insertData.emailToken = false;
+            }
         }
         r = await db.client.collection('users').insertOne(insertData);
     } catch (err) {

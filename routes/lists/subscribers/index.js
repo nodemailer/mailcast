@@ -167,7 +167,7 @@ router.get(
 
         if (subscriberData.user.toString() !== req.user._id.toString()) {
             let error = new Error('No permissions to access this subscriber');
-            error.status = 503;
+            error.status = 403;
             throw error;
         }
 
@@ -333,7 +333,7 @@ router.post(
 
         if (subscriberData.user.toString() !== req.user._id.toString()) {
             let error = new Error('No permissions to access this subscriber');
-            error.status = 503;
+            error.status = 403;
             throw error;
         }
 

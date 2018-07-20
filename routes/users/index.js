@@ -34,7 +34,7 @@ router.use(
 
         if (req.user.status !== 'admin') {
             let error = new Error('No permissions to access resticted page');
-            error.status = 503;
+            error.status = 403;
             throw error;
         }
 

@@ -135,3 +135,18 @@ indexes:
 #    expireAfterSeconds: 15552000
 #    key:
 #      created: 1
+
+- collection: subscribertokens
+  index:
+    name: by_user
+    key:
+      uemail: 1
+      token: 1
+
+- collection: subscribertokens
+  # autoexpire old access tokens
+  index:
+    name: old_events
+    expireAfterSeconds: 86400
+    key:
+      created: 1

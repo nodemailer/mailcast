@@ -18,6 +18,7 @@ const auth = require('./lib/auth');
 const tools = require('./lib/tools');
 const MessageFormat = require('messageformat');
 const settingsModel = require('./models/settings');
+const Recaptcha = require('express-recaptcha').Recaptcha;
 
 const app = express();
 
@@ -136,6 +137,17 @@ app.use(
         res.locals.disableJoin = settings.global_user_disableJoin;
 
         res.locals.format = util.format;
+
+        if (settings.global_site_recaptchaEnabled) {
+            res.locals.recaptcha = settings.global_site_recaptchaSiteKey;
+            req.recaptchaHandler = new Recaptcha(settings.global_site_recaptchaSiteKey, settings.global_site_recaptchaSecretKey);
+        }
+
+        if (req.user) {
+            // prevent caching logged in pages
+            res.set('cache-control', 'no-cache, must-revalidate, max-age=0');
+            res.set('expires', 'Wed, 11 Jan 1984 05:00:00 GMT');
+        }
 
         next();
     })

@@ -49,7 +49,7 @@ router.get(
             throw error;
         }
 
-        let listData = await listModel.get(subscriberData.list, false, { user: req.user._id });
+        let listData = await listModel.get(subscriberData.list);
 
         if (subscriberData.parent) {
             // move pending data over to actual subscriber record
@@ -59,7 +59,7 @@ router.get(
         if (subscriberData.status === 'unconfirmed') {
             if (!subscriberData.confirmToken || subscriberData.confirmToken !== result.value.t) {
                 let error = new Error('Invalid or expired confirmation token, please resubscribe');
-                error.status = 503;
+                error.status = 403;
                 throw error;
             }
 
@@ -102,7 +102,7 @@ router.get(
             return next(result.error);
         }
 
-        let listData = await listModel.get(result.value.list, false, { user: req.user._id });
+        let listData = await listModel.get(result.value.list);
 
         result.value.fields = {};
 
@@ -121,6 +121,7 @@ router.get(
 
 router.post(
     '/subscribe',
+    tools.recaptchaVerify,
     tools.asyncify(async (req, res, next) => {
         const schema = Joi.object().keys({
             list: Joi.string()
@@ -199,7 +200,7 @@ router.post(
             }
 
             if (!listData) {
-                listData = await listModel.get(result.value.list, false, { user: req.user._id });
+                listData = await listModel.get(result.value.list);
             }
 
             res.render('subscribers/subscribe', {
@@ -218,7 +219,7 @@ router.post(
             return showErrors(result.error);
         }
 
-        listData = await listModel.get(result.value.list, false, { user: req.user._id });
+        listData = await listModel.get(result.value.list);
 
         if (result.value.tz && !timezones.includes(result.value.tz)) {
             delete result.value.tz;
@@ -274,7 +275,7 @@ router.get(
             throw error;
         }
 
-        let listData = await listModel.get(subscriberData.list, false, { user: req.user._id });
+        let listData = await listModel.get(subscriberData.list);
 
         res.render('subscribers/edit', {
             page: 'subscribers',
@@ -377,7 +378,7 @@ router.post(
             }
 
             if (!listData) {
-                listData = await listModel.get(subscriberData.list, false, { user: req.user._id });
+                listData = await listModel.get(subscriberData.list);
             }
 
             if (!subscriberData) {
@@ -412,7 +413,7 @@ router.post(
             throw error;
         }
 
-        listData = await listModel.get(subscriberData.list, false, { user: req.user._id });
+        listData = await listModel.get(subscriberData.list);
 
         let subscriber = result.value.subscriber;
 
@@ -474,7 +475,7 @@ router.get(
             throw error;
         }
 
-        let listData = await listModel.get(subscriberData.list, false, { user: req.user._id });
+        let listData = await listModel.get(subscriberData.list);
 
         if (subscriberData.tempValid && subscriberData.tempValid < new Date()) {
             await subscriberModel.update(subscriberData._id, {
@@ -537,7 +538,7 @@ router.get(
             throw error;
         }
 
-        let listData = await listModel.get(subscriberData.list, false, { user: req.user._id });
+        let listData = await listModel.get(subscriberData.list);
 
         res.render('subscribers/unsubscribe', {
             page: 'subscribers',
@@ -608,7 +609,7 @@ router.post(
         };
 
         subscriberData = await subscriberModel.get(result.value.subscriber);
-        listData = await listModel.get(subscriberData.list, false, { user: req.user._id });
+        listData = await listModel.get(subscriberData.list);
 
         if (!subscriberData) {
             let error = new Error('Subscriber not found');
@@ -640,6 +641,151 @@ router.post(
             values: subscriberData,
             errors: {},
             error: false
+        });
+    })
+);
+
+router.get(
+    '/subscriptions',
+    tools.asyncify(async (req, res) => {
+        res.render('subscribers/subscriptions', {
+            page: 'subscribers',
+            title: 'Subscriptions',
+            values: {},
+            errors: {},
+            error: false
+        });
+    })
+);
+
+router.post(
+    '/subscriptions',
+    tools.recaptchaVerify,
+    tools.asyncify(async (req, res) => {
+        const schema = Joi.object().keys({
+            email: Joi.string()
+                .trim()
+                .empty('')
+                .email()
+                .label('E-mail Address')
+                .required(),
+            e: Joi.string()
+                .trim()
+                .valid('')
+                .required()
+        });
+
+        const result = Joi.validate(req.body, schema, {
+            abortEarly: false,
+            convert: true,
+            stripUnknown: true
+        });
+
+        let showErrors = async err => {
+            let errors = {};
+            let error = false;
+            if (err && err.details) {
+                err.details.forEach(detail => {
+                    let path = detail.path;
+                    if (Array.isArray(path)) {
+                        path = path.pop();
+                    }
+                    if (!errors[path]) {
+                        errors[path] = detail.message;
+                    }
+                });
+            } else {
+                error = err.message;
+            }
+
+            if (errors.e) {
+                error = 'JavaScript needs to be enabled in order to subscribe';
+            }
+
+            res.render('subscribers/subscriptions', {
+                page: 'subscribers',
+                title: 'Subscriptions',
+                values: result.value,
+                errors,
+                error
+            });
+        };
+
+        if (result.error) {
+            return showErrors(result.error);
+        }
+
+        try {
+            await subscriberModel.sendToken(result.value.email);
+        } catch (err) {
+            return showErrors(err);
+        }
+
+        req.flash('success', 'Subscriptions link was sent to your email address');
+        res.redirect('/subscribers/subscriptions');
+    })
+);
+
+router.get(
+    '/subscriptions/list',
+    tools.asyncify(async (req, res, next) => {
+        const schema = Joi.object().keys({
+            email: Joi.string()
+                .trim()
+                .empty('')
+                .email()
+                .label('E-mail Address')
+                .required(),
+            t: Joi.string()
+                .hex()
+                .lowercase()
+                .length(20)
+                .label('Validation token')
+                .required(),
+            page: Joi.number()
+                .min(0)
+                .label('Page')
+                .default(1),
+            limit: Joi.number()
+                .min(0)
+                .max(100)
+                .label('Limit')
+                .default(30)
+        });
+
+        const result = Joi.validate(req.query, schema, {
+            abortEarly: false,
+            convert: true,
+            stripUnknown: true
+        });
+
+        if (result.error) {
+            return next(result.error);
+        }
+
+        await subscriberModel.checkToken(result.value.email, result.value.t);
+
+        let { subscriptions, total, page, pages } = await subscriberModel.listSubscriptions(result.value.email, result.value.page, result.value.limit);
+
+        res.render('subscribers/list', {
+            page: 'subscribers',
+            title: 'Subscriptions',
+            pagingUrl:
+                '/subscribers/subscriptions/list?email=' +
+                encodeURIComponent(result.value.email) +
+                '&t=' +
+                encodeURIComponent(result.value.t) +
+                '&limit=' +
+                result.value.limit +
+                '&page=%s',
+            email: result.value.email,
+            curpage: page,
+            pages,
+            subscriptions: subscriptions.map((subscriptionData, i) => {
+                subscriptionData.nr = (page - 1) * result.value.limit + i + 1;
+                return subscriptionData;
+            }),
+            total
         });
     })
 );

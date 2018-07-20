@@ -1,0 +1,29 @@
+extends ../layouts/subscribers.pug
+
+block content
+
+    h3 Subscriptions for #{email}
+
+    if !subscriptions.length
+
+        p No subscriptions found
+
+    else
+
+        table.table.mt-3
+            thead
+                tr
+                    th #
+                    th List
+                    th Status
+                    th &nbsp;
+            tbody
+                for subscriptionData in subscriptions
+                    tr
+                        th= subscriptionData.nr
+                        td= subscriptionData.listData.name
+                        td= subscriptionData.statusStr
+                        td
+                            a(href='/subscribers/edit/'+subscriptionData._id) Edit
+
+    +paging(curpage, pages, pagingUrl)

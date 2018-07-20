@@ -38,7 +38,18 @@ html(lang='en')
                 .container
                     span.text-muted #{appname} is powered by
                         = " "
-                        a(href='https://github.com/andris9/mailcast') Mailcast
+                        a(href='https://mailcast.app') Mailcast
 
         block scripts
             script(src='/app/bundle.js')
+
+            if recaptcha
+                script(src='https://www.google.com/recaptcha/api.js')
+
+                script.
+                    function onCreateSubmit(token) {
+                        let submitForm = document.querySelector('form.mm-captcha-form');
+                        if(submitForm){
+                            submitForm.submit();
+                        }
+                    }

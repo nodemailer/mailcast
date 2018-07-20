@@ -36,7 +36,7 @@ router.use((req, res, next) => {
 router.use('/join', (req, res, next) => {
     if (res.locals.disableJoin) {
         let error = new Error('Account signup is currently disabled');
-        error.status = 503;
+        error.status = 403;
         return next(error);
     }
     next();

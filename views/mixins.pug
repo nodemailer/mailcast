@@ -27,11 +27,11 @@ mixin modal(id, title, text, canceltype, oktype, canceltext, oktext)
         div.modal-dialog(role="document")
             div.modal-content
                 div.modal-header
-                    h5.modal-title= title
+                    h5.modal-title#mm-modal-title= title
                     button.close(type="button", data-dismiss="modal", aria-label="Close")
                         span(aria-hidden="true") &times;
 
-                div.modal-body
+                div.modal-body#mm-modal-body
                     p= text
 
                 div.modal-footer

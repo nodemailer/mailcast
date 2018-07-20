@@ -6,6 +6,14 @@ const tools = require('../lib/tools');
 const crypto = require('crypto');
 const emails = require('../lib/emails');
 const log = require('npmlog');
+const listModel = require('./list');
+
+const statuses = {
+    subscribed: 'Subscribed',
+    unsubscribed: 'Unsubscribed',
+    unconfirmed: 'Unconfirmed',
+    bounced: 'Bounced'
+};
 
 module.exports.get = async (subscriber, fromPending) => {
     let query = {};
@@ -396,4 +404,97 @@ module.exports.activatePending = async subscriberData => {
     }
 
     return r && r.value;
+};
+
+module.exports.listSubscriptions = async (email, list, page, limit) => {
+    page = Math.max(Number(page) || 1, 1);
+    limit = Math.max(Number(limit) || 10, 1);
+    let uemail = tools.normalizeEmail(email);
+
+    let query = {
+        uemail
+    };
+
+    let total = await db.client.collection('subscribers').count(query);
+    let pages = Math.ceil(total / limit) || 1;
+
+    if (total < limit) {
+        page = 1;
+    } else if ((page - 1) * limit > total) {
+        page = pages;
+    }
+
+    let subscriptions = await db.client
+        .collection('subscribers')
+        .find(query, {
+            limit,
+            skip: (page - 1) * limit,
+            projection: {
+                _id: true,
+                list: true,
+                name: true,
+                email: true,
+                status: true,
+                testSubscriber: true,
+                created: true
+            },
+            sort: {
+                name: 1
+            }
+        })
+        .toArray();
+
+    // perform local JOIN to get list info
+    let lists = new Map();
+    for (let subscriptionData of subscriptions) {
+        subscriptionData.statusStr = statuses[subscriptionData.status];
+        let list = subscriptionData.list.toString();
+        if (lists.has(list)) {
+            subscriptionData.listData = lists.get(list);
+            continue;
+        }
+        try {
+            let listData = await listModel.get(subscriptionData.list);
+            lists.set(list, listData || {});
+            subscriptionData.listData = listData;
+        } catch (err) {
+            // ignore
+            subscriptionData.listData = {};
+        }
+    }
+
+    return { subscriptions, total, page, pages };
+};
+
+module.exports.createToken = async email => {
+    let uemail = tools.normalizeEmail(email);
+
+    let tokenData = {
+        uemail,
+        token: crypto.randomBytes(10).toString('hex'),
+        created: new Date()
+    };
+
+    await db.client.collection('subscribertokens').insertOne(tokenData);
+    return tokenData.token;
+};
+
+module.exports.checkToken = async (email, token) => {
+    let uemail = tools.normalizeEmail(email);
+    let query = {
+        uemail,
+        token
+    };
+    let tokenData = await db.client.collection('subscribertokens').findOne(query);
+    if (!tokenData) {
+        let error = new Error('Invalid or expired verification token');
+        error.status = 403;
+        throw error;
+    }
+    return true;
+};
+
+module.exports.sendToken = async email => {
+    let token = await module.exports.createToken(email);
+    setImmediate(() => emails.emailSubscriptionsToken({ email, token }).catch(() => false));
 };

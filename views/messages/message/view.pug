@@ -16,6 +16,11 @@ block content
                 =" "
                 button.btn.btn-warning(type="button", data-toggle="modal", data-target="#mm-test-confirm" disabled=!listData.subscribers) Send to test subscribers
 
+            if !user.emailValidated
+                div.mt-3.alert.alert-warning Your email address <em>#{user.email}</em> is not yet validated. You can not send campaigns with an unvalidated account.
+                    =" "
+                    a.alert-link.mm-action(href='#', data-mm-event='click', data-mm-action='resendValidation') Resend validation link
+
         form(method='post', action='/messages/send')
             input(type='hidden', name='_csrf', value=csrf)
             input(type='hidden', name='message', value=message)

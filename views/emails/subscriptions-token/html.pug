@@ -1,0 +1,11 @@
+extends ../../layouts/email.pug
+
+block content
+    h3 Subscription listing
+
+    p Click on the link below to view all subscriptions of #{email} at <a href="#{appurl}">#{appname}</a>
+
+    p
+        a.action-link(href=subscriptionsUrl) List my subscriptions
+
+    p The given link expires in 24 hours.

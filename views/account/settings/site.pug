@@ -27,22 +27,56 @@ block content
             if errors && errors.global_site_baseUrl
                 .invalid-feedback= errors.global_site_baseUrl
 
-        div.form-group.form-check
-            input.form-check-input#reset-dkim(type='checkbox', name='resetDkim', checked=values.resetDkim)
-            label.form-check-label(for="reset-dkim") Reset DKIM key
-            small.form-text.text-muted Check this if you want to replace current DKIM key with a new one
+        div.card
+            div.card-header reCAPTCHA
+            div.card-body
+                p.card-text Using reCAPTCHA requires you to have a valid key for application hostname "<span id="mm-curdomain">#{values.global_site_hostname}</span>". You can create one <a href="https://www.google.com/recaptcha/admin">here</a> (choose the Invisible reCAPTCHA).
 
-        .form-group
-            label DKIM Selector
-            input.form-control.pgp-input(type='text', value=dkim.name, readonly=true)
-            small.form-text.text-muted Use this value as the subdomain name of your email domain for a DNS TXT record
+                div.form-group.form-check
+                    input.form-check-input#global_site_recaptchaEnabled(type='checkbox', name='global_site_recaptchaEnabled', checked=values.global_site_recaptchaEnabled)
+                    label.form-check-label(for="global_site_recaptchaEnabled") Enable reCAPTCHA
+                    small.form-text.text-muted Check this if you want to use reCAPTCHA for subscription forms
+                    if errors && errors.global_site_recaptchaEnabled
+                        .invalid-feedback= errors.global_site_recaptchaEnabled
 
-        .form-group
-            label DKIM Public Key
-            input.form-control.pgp-input(type='text', value=dkim.value, readonly=true)
-            small.form-text.text-muted Use this as the value for the DNS TXT record
+                .form-group
+                    label(for='global_site_recaptchaSiteKey') Site key
+                    input#global_site_recaptchaSiteKey.form-control(type='text', name='global_site_recaptchaSiteKey', required=false, value=values.global_site_recaptchaSiteKey, class={'is-invalid': errors && errors.global_site_recaptchaSiteKey})
+                    if errors && errors.global_site_recaptchaSiteKey
+                        .invalid-feedback= errors.global_site_recaptchaSiteKey
 
-        .form-group
+                .form-group
+                    label(for='global_site_recaptchaSecretKey') Secret key
+                    input#global_site_recaptchaSecretKey.form-control(type='password', name='global_site_recaptchaSecretKey', required=false, value=values.global_site_recaptchaSecretKey, class={'is-invalid': errors && errors.global_site_recaptchaSecretKey})
+                    if errors && errors.global_site_recaptchaSecretKey
+                        .invalid-feedback= errors.global_site_recaptchaSecretKey
+
+                p.card-text Make sure you test subscription forms if reCAPTCHA is enabled. If the key is not correct then no-one can subscribe to your lists
+
+        div.card.mt-3
+            div.card-header DKIM settings
+            div.card-body
+                p.card-text #{appname} signs all messages with the same key, so make sure your sending domains have the same selector and key set
+
+                div.form-group.form-check
+                    input.form-check-input#reset-dkim(type='checkbox', name='resetDkim', checked=values.resetDkim)
+                    label.form-check-label(for="reset-dkim") Reset DKIM key
+                    small.form-text.text-muted Check this if you want to replace current DKIM key with a new one
+
+                .form-group
+                    label DKIM Selector
+                    input.form-control.pgp-input(type='text', value=dkim.name, readonly=true)
+                    small.form-text.text-muted Use this value as the subdomain name of your email domain for a DNS TXT record
+
+                .form-group
+                    label DKIM Public Key
+                    input.form-control.pgp-input(type='text', value=dkim.value, readonly=true)
+                    small.form-text.text-muted Use this as the value for the DNS TXT record
+
+        .form-group.mt-3
             button.btn.btn-primary(type='submit') Update settings
             = " "
             a.btn.btn-warning(href='/account/settings') Cancel
+
+    script.
+        document.getElementById('mm-curdomain').textContent = window.location.hostname;

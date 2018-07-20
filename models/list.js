@@ -30,7 +30,7 @@ module.exports.get = async (list, fields, options) => {
 
     if (listData && options.user && listData.user.toString() !== options.user.toString()) {
         let error = new Error('Not permitted to access selected list');
-        error.status = 503;
+        error.status = 403;
         throw error;
     }
 
