@@ -129,7 +129,7 @@ async function main() {
                 log.error('Updates', 'Failed to check for updates. %s', err.message);
             }
         };
-        tools.asyncInterval(checkUpdates, 60 * 1000);
+        tools.asyncInterval(checkUpdates, 3600 * 1000);
     } else {
         const http = require('http');
 
