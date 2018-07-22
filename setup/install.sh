@@ -176,6 +176,7 @@ chmod 0750 /var/log/mailcast
 
 # Install dependencies and build static assets
 sudo -H -u mailcast npm install
+sudo -H -u mailcast npm run geoip 2>/dev/null || true
 
 # reload log options
 systemctl restart rsyslog 2>/dev/null || true
