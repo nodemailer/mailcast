@@ -154,6 +154,8 @@ cp "$APP_ROOT/setup/etc/tmpfiles.d/mailcast.conf" /etc/tmpfiles.d/mailcast.conf
 sed -i -e "s#APP_ROOT#$APP_ROOT#g;s#NODE_PATH#`which node`#g;" /etc/systemd/system/mailcast.service
 sed -i -e "s/secret cat/`pwgen 18 -1`/g;s/port=3002/port=80/g;s;#baseUrl=false;baseUrl=\"http://$APPDOMAIN\";g" /etc/mailcast/mailcast.toml
 
+sed -i -e "s/port=2525/port=25/g;" /etc/mailcast/verp.toml
+
 # configure database options
 echo "redis=\"redis://127.0.0.1:6379/1?password=$REDIS_PASSWORD\"
 mongo=\"mongodb://$MONGO_APP_USER:$MONGO_APP_PASSWORD@127.0.0.1:27017/mailcast?authSource=admin\"
