@@ -64,8 +64,7 @@ router.get(
             }
 
             await subscriberModel.update(subscriberData._id, {
-                status: 'subscribed',
-                confirmToken: null
+                status: 'subscribed'
             });
         }
 
@@ -480,8 +479,7 @@ router.get(
         if (subscriberData.tempValid && subscriberData.tempValid < new Date()) {
             await subscriberModel.update(subscriberData._id, {
                 tempEmail: null,
-                tempValid: null,
-                confirmToken: null
+                tempValid: null
             });
             req.flash('danger', 'Invalid or expired confirmation token');
             return res.redirect('/subscribers/edit/' + subscriberData._id);
@@ -495,8 +493,7 @@ router.get(
         await subscriberModel.update(subscriberData._id, {
             email: subscriberData.tempEmail,
             tempEmail: null,
-            tempValid: null,
-            confirmToken: null
+            tempValid: null
         });
 
         res.render('subscribers/change', {
