@@ -132,6 +132,24 @@ app.use(
             // fallback to defaults
         }
 
+        let baseUrl = settings.global_site_baseUrl;
+        if (!baseUrl) {
+            let proto = req.protocol;
+            let hostname = req.hostname;
+            let protoPort = proto === 'https' ? 443 : 80;
+            let baseUrl = config.www.baseUrl;
+            if (!baseUrl) {
+                baseUrl =
+                    proto +
+                    '://' +
+                    hostname +
+                    ((!config.www.proxy || !req.headers['x-forwarder-for']) && config.www.port !== protoPort ? ':' + config.www.port : '');
+            }
+
+            // set default site URL
+            await settingsModel.set('global_site_baseUrl', baseUrl);
+        }
+
         res.locals.appname = settings.global_site_appName;
         res.locals.appurl = settings.global_site_baseUrl;
         res.locals.disableJoin = settings.global_user_disableJoin;

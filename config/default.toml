@@ -13,9 +13,9 @@ appname="Mailcast"
 [www]
 secret="secret cat"
 postsize="5MB"
-host=false
+host=false # local ip address to bind to
 port=3002
-proxy=false
+proxy=false # set to true if using CloudFlare etc or behind Nginx/Apache
 secure=false # if true uses secure cookies
 #baseUrl=false # set to default application url, can be overriden in web interface
 

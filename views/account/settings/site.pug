@@ -14,18 +14,18 @@ block content
                 .invalid-feedback= errors.global_site_appName
 
         .form-group
-            label(for='global_site_hostname') Sender domain
-            input#global_site_hostname.form-control(type='text', name='global_site_hostname', placeholder='Your awesome app', required=true, value=values.global_site_hostname, class={'is-invalid': errors && errors.global_site_hostname})
-            small.form-text.text-muted All messages are sent from this domain, so the MX records of the domain should point to current server to catch potential bounces
-            if errors && errors.global_site_hostname
-                .invalid-feedback= errors.global_site_hostname
-
-        .form-group
             label(for='global_site_baseUrl') Site URL
             input#global_site_baseUrl.form-control(type='url', name='global_site_baseUrl', placeholder='http://example.com', required=true, value=values.global_site_baseUrl, class={'is-invalid': errors && errors.global_site_baseUrl})
-            small.form-text.text-muted This is the URL your service can be accessed. This address is mostly used in emails.
+            small.form-text.text-muted This is the URL your service can be accessed from. This address is mostly used in emails.
             if errors && errors.global_site_baseUrl
                 .invalid-feedback= errors.global_site_baseUrl
+
+        .form-group
+            label(for='global_site_hostname') Server hostname for VERP addresses
+            input#global_site_hostname.form-control(type='text', name='global_site_hostname', placeholder='Your awesome app', required=true, value=values.global_site_hostname, class={'is-invalid': errors && errors.global_site_hostname})
+            small.form-text.text-muted All messages are sent using this hostname as sender domain, so the MX records of the domain should point to current server to catch potential bounces
+            if errors && errors.global_site_hostname
+                .invalid-feedback= errors.global_site_hostname
 
         div.card
             div.card-header reCAPTCHA
