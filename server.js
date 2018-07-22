@@ -103,10 +103,13 @@ async function main() {
                         .performUpgrade()
                         .then(() => {
                             // kill all cluster workers
-                            for (const id in cluster.workers) {
-                                let worker = cluster.workers[id];
-                                worker.kill('SIGTERM');
-                            }
+                            workers.forEach(child => {
+                                try {
+                                    child.kill('SIGTERM');
+                                } catch (E) {
+                                    //ignore
+                                }
+                            });
                             upgrading = false;
                         })
                         .catch(err => {
