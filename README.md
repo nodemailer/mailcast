@@ -79,4 +79,4 @@ Document root for static files is in [/public](/public)
 
 ## License
 
-**EUPL-1.1+**
+**EUPL-1.1+** (1.1 or later)
