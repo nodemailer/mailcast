@@ -1,10 +1,10 @@
 # Mailcast
 
-**NB!** Mailcast is still a work in progress. It can be used for sending out newsletters but a lot of required functionality is still missing.
+**NB!** Mailcast is still a work in progress. It can be used for sending out newsletters but a lot of required functionality is still missing (ie. open/click tracking).
 
 Mailcast is a mailing list management software, batteries included. Install in on your server and start using it, that's it.
 
-Mailcast is for simpler newsletters sent from your own infrastructure. If you want to send an occasional newsletter to your followers then Mailcast is for you. If you want to send out triggered campaigns or perform A/B testing and use a delivery service like SES, then look somewhere else ([Mailtrain](http://mailtrain.org/) might be a good fit).
+Mailcast is for simpler newsletters sent from your own infrastructure. If you want to send an occasional newsletter to your followers then Mailcast is for you. If you want to send out triggered campaigns or perform A/B testing or use an external delivery service like SES, then look somewhere else ([Mailtrain](http://mailtrain.org/) might be a good fit).
 
 Sending emails from your own servers might seem daunting at first, so Mailcast tries to make everything as easy to manage as possible. Mailcast is able to send through multiple local IP addresses, it can detect IP blacklisting and sign all messages with DKIM as it uses [ZoneMTA](https://github.com/zone-eu/zone-mta/) as the underlying MTA component.
 

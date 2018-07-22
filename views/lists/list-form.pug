@@ -14,7 +14,7 @@
 .form-group
     label(for='email') From email address
     input#email.form-control(type='email', name='email', placeholder='From email', required=true, value=values.email, class={'is-invalid': errors && errors.email})
-    small.form-text.text-muted This is the address people will reply to.
+    small.form-text.text-muted This is the address people will reply to. See <a href="/help">Help page</a> for DKIM settings
     if errors && errors.email
         .invalid-feedback= errors.email
 

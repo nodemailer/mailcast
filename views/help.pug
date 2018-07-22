@@ -1,0 +1,20 @@
+extends layouts/main.pug
+
+block content
+    h2 #{appname} Help
+
+    hr
+
+    h3 DKIM settings
+
+    p #{appname} signs all messages with the same key, so make sure your sending domains have the same selector and key set
+
+    .form-group
+        label DKIM Selector
+        input.form-control.pgp-input(type='text', value=dkim.name, readonly=true)
+        small.form-text.text-muted Use this value as the subdomain name of your email domain for a DNS TXT record
+
+    .form-group
+        label DKIM Public Key
+        input.form-control.pgp-input(type='text', value=dkim.value, readonly=true)
+        small.form-text.text-muted Use this as the value for the DNS TXT record

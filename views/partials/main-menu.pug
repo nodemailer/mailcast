@@ -28,6 +28,9 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
                 li.nav-item(class={'active': page=='messages'})
                     a.nav-link(href='/messages') Messages
 
+                li.nav-item(class={'active': page=='help'})
+                    a.nav-link(href='/help') Help
+
             div.mr-auto
 
             ul.navbar-nav
@@ -45,10 +48,18 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
                             =" Log Out"
 
         else
+
+            ul.navbar-nav
+                li.nav-item(class={'active': page=='help'})
+                    a.nav-link(href='/help') Help
+        
             div.mr-auto
 
             ul.navbar-nav
                 //- menu items for anonymous user
+
+                li.nav-item(class={'active': page=='help'})
+                    a.nav-link(href='/help') Help
 
                 if !disableJoin
                     li.nav-item(class={'active': page=='join'})
