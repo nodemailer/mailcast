@@ -4,6 +4,15 @@ block content
 
     include settings-header
 
+    if hasUpdates
+        .div.alert.alert-info
+            strong Mailcast update
+            = " "
+            span There is a new version of Mailcast available
+            div.float-right
+                a.btn.btn-warning.mm-action(href='#', data-mm-event='click', data-mm-action='sidteUpgrade') Upgrade now
+            div.clearfix
+
     form(method='post', action='/account/settings/site')
         input(type='hidden', name='_csrf', value=csrf)
 

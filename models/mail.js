@@ -159,14 +159,14 @@ module.exports.updateStatus = async (db, email, status, logInfo) => {
                 message: true,
                 subscriber: true,
                 bounce: true,
-                test: true
+                testRun: true
             }
         });
     } catch (err) {
         throw err;
     }
 
-    if (!r || !r.value || r.value.bounce || r.value.test) {
+    if (!r || !r.value || r.value.bounce || r.value.testRun) {
         // not found or already processed
         return;
     }

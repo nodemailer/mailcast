@@ -51,6 +51,42 @@ let actions = {
                 console.error(err);
                 handleResultError(err.name || 'Error', 'Failed to post data to server: ' + (err.message || '').replace(/^\w*Error:\s*/, ''));
             });
+    },
+
+    sidteUpgrade: function() {
+        if (posting) {
+            return;
+        }
+        posting = true;
+
+        let form = {
+            _csrf: document.getElementById('_csrf').value
+        };
+
+        fetch('/account/settings/site/api/upgrade', {
+            method: 'post',
+            headers: {
+                Accept: 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify(form)
+        })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(result) {
+                posting = false;
+                if (!result.success) {
+                    return handleResultError(result.error);
+                }
+                handleResultSuccess('Upgrade', 'Upgrade process started. This may take some time.');
+            })
+            .catch(function(err) {
+                posting = false;
+                console.error(err);
+                handleResultError(err.name || 'Error', 'Failed to post data to server: ' + (err.message || '').replace(/^\w*Error:\s*/, ''));
+            });
     }
 };
 

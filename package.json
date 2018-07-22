@@ -22,6 +22,7 @@
     },
     "homepage": "https://github.com/nodemailer/mailcast#readme",
     "dependencies": {
+        "ajv": "^6.5.2",
         "baunsu": "0.2.3",
         "bcryptjs": "2.4.3",
         "body-parser": "1.18.3",

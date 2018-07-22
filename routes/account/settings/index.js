@@ -249,16 +249,36 @@ router.get(
     })
 );
 
-router.use(
-    '/settings',
-    tools.asyncify(async (req, res, next) => {
-        if (req.user.status !== 'admin') {
-            let error = new Error('No permissions to access this page');
-            error.status = 404;
+router.post(
+    '/api/resend-validation',
+    tools.asyncify(async (req, res) => {
+        let userData = await userModel.get(req.user._id);
+        if (!userData) {
+            return userModel.showJSONErrors(req, res, new Error('Failed to load user data'));
         }
-        next();
+
+        if (!userData.emailValidated) {
+            setImmediate(() => emails.emailValidation(userData).catch(() => false));
+        }
+
+        res.json({
+            success: true,
+            email: userData.email
+        });
     })
 );
+
+router.use((req, res, next) => {
+    if (/^\/(site)\b/.test(req.url)) {
+        return next();
+    }
+
+    if (req.user.status !== 'admin') {
+        let error = new Error('No permissions to access this page');
+        error.status = 404;
+    }
+    next();
+});
 
 router.get(
     '/site',
@@ -274,6 +294,7 @@ router.get(
                 name: dkimData.selector + '._domainkey',
                 value: 'v=DKIM1;t=s;p=' + dkimData.publicKey.replace(/^-.*-$/gm, '').replace(/\s/g, '')
             },
+            hasUpdates: await settingsModel.getUpdates(),
             values: siteSettings,
             errors: {},
             error: false
@@ -362,6 +383,7 @@ router.post(
                     name: dkimData.selector + '._domainkey',
                     value: 'v=DKIM1;t=s;p=' + dkimData.publicKey.replace(/^-.*-$/gm, '').replace(/\s/g, '')
                 },
+                hasUpdates: await settingsModel.getUpdates(),
                 values: result.value,
                 errors,
                 error
@@ -386,20 +408,11 @@ router.post(
 );
 
 router.post(
-    '/api/resend-validation',
+    '/site/api/upgrade',
     tools.asyncify(async (req, res) => {
-        let userData = await userModel.get(req.user._id);
-        if (!userData) {
-            return userModel.showJSONErrors(req, res, new Error('Failed to load user data'));
-        }
-
-        if (!userData.emailValidated) {
-            setImmediate(() => emails.emailValidation(userData).catch(() => false));
-        }
-
+        process.send({ cmd: 'siteUpgrade' });
         res.json({
-            success: true,
-            email: userData.email
+            success: true
         });
     })
 );

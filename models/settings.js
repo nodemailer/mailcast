@@ -1,7 +1,12 @@
 'use strict';
 
+const log = require('npmlog');
 const config = require('wild-config');
 const db = require('../lib/db');
+const util = require('util');
+const fs = require('fs');
+const path = require('path');
+const exec = util.promisify(require('child_process').exec);
 
 const defaults = {
     global_site_appName: config.appname,
@@ -116,4 +121,89 @@ module.exports.setMulti = async settings => {
 
     let r = await db.client.collection('settings').bulkWrite(ops, { ordered: false });
     return r.upsertedCount;
+};
+
+module.exports.getUpdates = async () => {
+    let updates = await db.redis.get('updates');
+    updates = Number(updates) || 0;
+    return updates;
+};
+
+// must be run as the application owner or root
+module.exports.checkUpdates = async () => {
+    let cwd = path.join(__dirname, '..');
+    let cmd = 'git fetch && git rev-list HEAD...origin/master --count';
+
+    let opts = {
+        cwd: path.join(__dirname, '..'),
+        env: process.env,
+        windowsHide: true,
+        encoding: 'utf-8'
+    };
+
+    // determine correct user and group for the git folder
+    let stat = await util.promisify(fs.stat)(path.join(cwd, '.git'));
+    if (stat.uid) {
+        opts.uid = stat.uid;
+    }
+
+    if (stat.gid) {
+        opts.gid = stat.gid;
+    }
+
+    let { stdout } = await exec(cmd, opts);
+
+    stdout = (stdout || '')
+        .trim()
+        .split('\n')
+        .pop();
+
+    let response;
+    if (!stdout || isNaN(stdout) || stdout === '0') {
+        response = 0;
+    } else {
+        response = Number(stdout);
+    }
+
+    await db.redis.set('updates', response.toString());
+
+    return response;
+};
+
+// must be run as the application owner or root
+module.exports.performUpgrade = async () => {
+    let cwd = path.join(__dirname, '..');
+    let cmd = 'git pull origin master && npm install --production';
+
+    let opts = {
+        cwd: path.join(__dirname, '..'),
+        env: process.env,
+        windowsHide: true,
+        encoding: 'utf-8'
+    };
+
+    // determine correct user and group for the git folder
+    let stat = await util.promisify(fs.stat)(path.join(cwd, '.git'));
+    if (stat.uid) {
+        opts.uid = stat.uid;
+    }
+
+    if (stat.gid) {
+        opts.gid = stat.gid;
+    }
+
+    let { stdout, stderr } = await exec(cmd, opts);
+
+    stdout = stdout.trim();
+    stderr = stderr.trim();
+
+    if (stderr) {
+        log.info('Upgrade', stderr);
+    }
+
+    if (stdout) {
+        log.info('Upgrade', stdout);
+    }
+
+    await db.redis.del('updates');
 };

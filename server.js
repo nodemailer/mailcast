@@ -15,6 +15,8 @@ if (process.env.NODE_CONFIG_ONLY === 'true') {
 const log = require('npmlog');
 const cluster = require('cluster');
 const db = require('./lib/db');
+const tools = require('./lib/tools');
+const settingsModel = require('./models/settings');
 
 log.level = config.log.level;
 
@@ -87,6 +89,44 @@ async function main() {
                 createWorkerProcess(key);
             });
         }, 1000);
+
+        let upgrading = false;
+        cluster.on('message', (worker, message) => {
+            log.info('Cluster', 'Request received from %s. message=%s', worker.process.pid, JSON.stringify(message));
+            switch (message && message.cmd) {
+                case 'siteUpgrade':
+                    if (upgrading) {
+                        break;
+                    }
+                    upgrading = true;
+                    settingsModel
+                        .performUpgrade()
+                        .then(() => {
+                            // kill all cluster workers
+                            for (const id in cluster.workers) {
+                                let worker = cluster.workers[id];
+                                worker.kill('SIGTERM');
+                            }
+                            upgrading = false;
+                        })
+                        .catch(err => {
+                            log.error('Upgrade', err);
+                            upgrading = false;
+                        });
+            }
+        });
+
+        let checkUpdates = async () => {
+            if (upgrading) {
+                return;
+            }
+            try {
+                await settingsModel.checkUpdates();
+            } catch (err) {
+                log.error('Updates', 'Failed to check for updates. %s', err.message);
+            }
+        };
+        tools.asyncInterval(checkUpdates, 60 * 1000);
     } else {
         const http = require('http');
 
