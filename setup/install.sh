@@ -13,7 +13,7 @@ fi
 
 set -e
 
-UPSTREAM="git@github.com:nodemailer/mailcast.git"
+UPSTREAM="git://github.com/nodemailer/mailcast.git"
 
 HOSTNAME=`hostname`
 APPDOMAIN=$1
