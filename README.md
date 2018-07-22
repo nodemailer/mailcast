@@ -14,6 +14,7 @@ Sending emails from your own servers might seem daunting at first, so Mailcast t
 -   Customizable subscription forms
 -   Multi tenant, let your family or friends manage their own lists
 -   Built-in MTA, no need to use a separate SMTP service
+-   One-click upgrade from web interface
 
 ### Requirements
 
@@ -27,6 +28,14 @@ Sending emails from your own servers might seem daunting at first, so Mailcast t
 Mailtrain can be configured to run on Ubuntu 16.04/18.04 using the included [install script](setup/install.sh). Run it as root in an emtpy VPS (empty meaning that you do not have anything using SMTP or HTTP ports).
 
 Installation sets up config folder to `/etc/mailcast` and a systemd service called `mailcast`.
+
+```
+$ wget https://raw.githubusercontent.com/nodemailer/mailcast/master/setup/install.sh
+$ chmod +x install.sh
+$ sudo ./install.sh example.com
+```
+
+Where `example.com` is the optional hostname of the server. If not provided then hostname is detected automatically.
 
 ### Configuration
 

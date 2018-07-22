@@ -13,6 +13,8 @@ fi
 
 set -e
 
+UPSTREAM="git@github.com:nodemailer/mailcast.git"
+
 HOSTNAME=`hostname`
 APPDOMAIN=$1
 APPDOMAIN="${APPDOMAIN:-$HOSTNAME}"
@@ -136,7 +138,7 @@ rm -rf /etc/systemd/system/mailcast.service
 
 mkdir -p "$APP_ROOT"
 cd "$APP_ROOT"
-git clone git@github.com:nodemailer/mailcast.git .
+git clone "$UPSTREAM" .
 
 # application config
 rm -rf /etc/mailcast
