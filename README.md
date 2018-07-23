@@ -8,6 +8,8 @@ Mailcast is for simpler newsletters sent from your own infrastructure. If you wa
 
 Sending emails from your own servers might seem daunting at first, so Mailcast tries to make everything as easy to manage as possible. Mailcast is able to send through multiple local IP addresses, it can detect IP blacklisting and sign all messages with DKIM as it uses [ZoneMTA](https://github.com/zone-eu/zone-mta/) as the underlying MTA component.
 
+[Screenshots](https://cloudup.com/cpNpzlf3V5j).
+
 ### Features
 
 -   List management
