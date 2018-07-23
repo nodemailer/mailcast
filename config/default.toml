@@ -33,3 +33,6 @@ www=':remote-addr [:date[iso]] :site-user ":method :url HTTP/:http-version" :sta
 [verp]
 # Load VERP MX config
 # @include "verp.toml"
+
+[upgrade]
+checkInterval=3600 # seconds
