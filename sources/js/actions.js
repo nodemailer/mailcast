@@ -53,7 +53,7 @@ let actions = {
             });
     },
 
-    sidteUpgrade: function() {
+    siteUpgrade: function() {
         if (posting) {
             return;
         }
@@ -81,6 +81,8 @@ let actions = {
                     return handleResultError(result.error);
                 }
                 handleResultSuccess('Upgrade', 'Upgrade process started. This may take some time.');
+                document.getElementById('mm-upgrade-info').classList.remove('mm-hidden');
+                document.getElementById('mm-upgrade-box').classList.add('mm-hidden');
             })
             .catch(function(err) {
                 posting = false;

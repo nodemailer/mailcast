@@ -4,20 +4,20 @@ block content
 
     include settings-header
 
-    if isUpgrading
-        .div.alert.alert-info
+    if hasUpdates
+        .div.alert.alert-info#mm-upgrade-info(class={'mm-hidden':!isUpgrading})
             strong Mailcast update
             = " "
             span Mailcast software is being currently upgraded…
 
-    if isUpgrading && hasUpdates
-        .div.alert.alert-info
-            strong Mailcast update
-            = " "
-            span There is a new version of Mailcast available
-            div.float-right
-                a.btn.btn-warning.mm-action(href='#', data-mm-event='click', data-mm-action='sidteUpgrade') Upgrade now
-            div.clearfix
+        if !isUpgrading
+            .div.alert.alert-info#mm-upgrade-box
+                strong Mailcast update
+                = " "
+                span There is a new version of Mailcast available
+                div.float-right
+                    a.btn.btn-warning.mm-action(href='#', data-mm-event='click', data-mm-action='siteUpgrade') Upgrade now
+                div.clearfix
 
     form(method='post', action='/account/settings/site')
         input(type='hidden', name='_csrf', value=csrf)
