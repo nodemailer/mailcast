@@ -178,6 +178,7 @@ app.use('/subscribers', require('./routes/subscribers'));
 app.use('/users', require('./routes/users'));
 app.use('/messages', require('./routes/messages'));
 app.use('/templates', require('./routes/templates'));
+app.use('/archive', require('./routes/archive'));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

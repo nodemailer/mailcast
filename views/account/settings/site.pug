@@ -6,18 +6,15 @@ block content
 
     if hasUpdates
         .div.alert.alert-info#mm-upgrade-info(class={'mm-hidden':!isUpgrading})
-            strong Mailcast update
-            = " "
-            span Mailcast software is being currently upgraded…
+            h5 Mailcast update
+            p.mb-0 Mailcast software is currently being upgraded…
 
         if !isUpgrading
             .div.alert.alert-info#mm-upgrade-box
-                strong Mailcast update
-                = " "
-                span There is a new version of Mailcast available
                 div.float-right
-                    a.btn.btn-warning.mm-action(href='#', data-mm-event='click', data-mm-action='siteUpgrade') Upgrade now
-                div.clearfix
+                    a.btn.btn-danger.mm-action(href='#', data-mm-event='click', data-mm-action='siteUpgrade') Update now
+                h5 Mailcast update
+                p.mb-0 There is a new version of Mailcast available. Click on the <em>Update now</em> button to start the upgrade process.
 
     form(method='post', action='/account/settings/site')
         input(type='hidden', name='_csrf', value=csrf)
