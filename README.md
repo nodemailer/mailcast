@@ -1,6 +1,6 @@
 # Mailcast
 
-**NB!** Mailcast is still a work in progress. It can be used for sending out newsletters but a lot of required functionality is still missing (ie. open/click tracking).
+**NB!** Mailcast is still a work in progress. It can be used for sending out newsletters but a lot of required functionality is still missing (ie. open/click tracking and archives).
 
 Mailcast is a mailing list management software, batteries included. Install in on your server and start using it, that's it.
 
