@@ -129,6 +129,11 @@ module.exports.getUpdates = async () => {
     return updates;
 };
 
+module.exports.isUpgrading = async () => {
+    let value = await db.redis.hget('sess', 'upgrade');
+    return value === '1';
+};
+
 // must be run as the application owner or root
 module.exports.checkUpdates = async () => {
     let cwd = path.join(__dirname, '..');
@@ -192,18 +197,28 @@ module.exports.performUpgrade = async () => {
         opts.gid = stat.gid;
     }
 
-    let { stdout, stderr } = await exec(cmd, opts);
+    await db.redis.hset('sess', 'upgrade', '1');
 
-    stdout = stdout.trim();
-    stderr = stderr.trim();
+    try {
+        let { stdout, stderr } = await exec(cmd, opts);
 
-    if (stderr) {
-        log.info('Upgrade', stderr);
+        stdout = stdout.trim();
+        stderr = stderr.trim();
+
+        if (stderr) {
+            log.info('Upgrade', stderr);
+        }
+
+        if (stdout) {
+            log.info('Upgrade', stdout);
+        }
+    } catch (err) {
+        log.error('Upgrade', err);
     }
 
-    if (stdout) {
-        log.info('Upgrade', stdout);
-    }
-
-    await db.redis.del('updates');
+    await db.redis
+        .multi()
+        .hdel('sess', 'upgrade')
+        .del('updates')
+        .exec();
 };

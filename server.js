@@ -99,6 +99,7 @@ async function main() {
                         break;
                     }
                     upgrading = true;
+
                     settingsModel
                         .performUpgrade()
                         .then(() => {

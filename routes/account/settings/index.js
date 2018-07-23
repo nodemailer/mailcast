@@ -295,6 +295,7 @@ router.get(
                 value: 'v=DKIM1;t=s;p=' + dkimData.publicKey.replace(/^-.*-$/gm, '').replace(/\s/g, '')
             },
             hasUpdates: await settingsModel.getUpdates(),
+            isUpgrading: await settingsModel.isUpgrading(),
             values: siteSettings,
             errors: {},
             error: false
@@ -384,6 +385,7 @@ router.post(
                     value: 'v=DKIM1;t=s;p=' + dkimData.publicKey.replace(/^-.*-$/gm, '').replace(/\s/g, '')
                 },
                 hasUpdates: await settingsModel.getUpdates(),
+                isUpgrading: await settingsModel.isUpgrading(),
                 values: result.value,
                 errors,
                 error

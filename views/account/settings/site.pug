@@ -4,7 +4,13 @@ block content
 
     include settings-header
 
-    if hasUpdates
+    if isUpgrading
+        .div.alert.alert-info
+            strong Mailcast update
+            = " "
+            span Mailcast software is being currently upgraded…
+
+    if isUpgrading && hasUpdates
         .div.alert.alert-info
             strong Mailcast update
             = " "
