@@ -69,18 +69,6 @@ router.get(
             throw error;
         }
 
-        console.log(
-            require('util').inspect(
-                {
-                    listData,
-                    subscriberData,
-                    messageData
-                },
-                false,
-                22
-            )
-        );
-
         res.render('archive/view', {
             page: 'archive',
             title: 'Archived message',
