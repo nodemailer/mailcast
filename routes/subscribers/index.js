@@ -754,7 +754,13 @@ router.get(
             return next(result.error);
         }
 
-        let tokenInfo = await subscriberModel.checkToken(result.value.t);
+        let tokenInfo;
+        try {
+            tokenInfo = await subscriberModel.checkToken(result.value.t);
+        } catch (err) {
+            req.flash('danger', err.message);
+            return res.redirect('/subscribers/subscriptions');
+        }
 
         let { subscriptions, total, page, pages } = await subscriberModel.listSubscriptions(tokenInfo.email, result.value.page, result.value.limit);
 
