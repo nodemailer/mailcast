@@ -34,10 +34,8 @@ Installation sets up config folder to `/etc/mailcast` and a systemd service call
 ```
 $ wget https://raw.githubusercontent.com/nodemailer/mailcast/master/setup/install.sh
 $ chmod +x install.sh
-$ sudo ./install.sh example.com
+$ sudo ./install.sh
 ```
-
-Where `example.com` is the optional hostname of the server. If not provided then hostname is detected automatically.
 
 ### Configuration
 
