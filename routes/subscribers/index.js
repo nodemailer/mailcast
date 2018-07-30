@@ -727,12 +727,6 @@ router.get(
     '/subscriptions/list',
     tools.asyncify(async (req, res, next) => {
         const schema = Joi.object().keys({
-            email: Joi.string()
-                .trim()
-                .empty('')
-                .email()
-                .label('E-mail Address')
-                .required(),
             t: Joi.string()
                 .hex()
                 .lowercase()
@@ -760,22 +754,15 @@ router.get(
             return next(result.error);
         }
 
-        await subscriberModel.checkToken(result.value.email, result.value.t);
+        let tokenInfo = await subscriberModel.checkToken(result.value.t);
 
-        let { subscriptions, total, page, pages } = await subscriberModel.listSubscriptions(result.value.email, result.value.page, result.value.limit);
+        let { subscriptions, total, page, pages } = await subscriberModel.listSubscriptions(tokenInfo.email, result.value.page, result.value.limit);
 
         res.render('subscribers/list', {
             page: 'subscribers',
             title: 'Subscriptions',
-            pagingUrl:
-                '/subscribers/subscriptions/list?email=' +
-                encodeURIComponent(result.value.email) +
-                '&t=' +
-                encodeURIComponent(result.value.t) +
-                '&limit=' +
-                result.value.limit +
-                '&page=%s',
-            email: result.value.email,
+            pagingUrl: '/subscribers/subscriptions/list?t=' + encodeURIComponent(result.value.t) + '&limit=' + result.value.limit + '&page=%s',
+            email: tokenInfo.email,
             curpage: page,
             pages,
             subscriptions: subscriptions.map((subscriptionData, i) => {

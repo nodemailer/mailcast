@@ -471,6 +471,7 @@ module.exports.createToken = async email => {
 
     let tokenData = {
         uemail,
+        email,
         token: crypto.randomBytes(10).toString('hex'),
         created: new Date()
     };
@@ -479,10 +480,8 @@ module.exports.createToken = async email => {
     return tokenData.token;
 };
 
-module.exports.checkToken = async (email, token) => {
-    let uemail = tools.normalizeEmail(email);
+module.exports.checkToken = async token => {
     let query = {
-        uemail,
         token
     };
     let tokenData = await db.client.collection('subscribertokens').findOne(query);
@@ -491,7 +490,7 @@ module.exports.checkToken = async (email, token) => {
         error.status = 403;
         throw error;
     }
-    return true;
+    return tokenData;
 };
 
 module.exports.sendToken = async email => {

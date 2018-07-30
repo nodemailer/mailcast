@@ -138,9 +138,8 @@ indexes:
 
 - collection: subscribertokens
   index:
-    name: by_user
+    name: by_token
     key:
-      uemail: 1
       token: 1
 
 - collection: subscribertokens
